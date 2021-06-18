@@ -1,16 +1,9 @@
 # this code does not account (yet) for the presence of a frailty term
-
-seed <- 2021
-n_scl <- 1.5
-alpha_r <- 0.5 
-alpha_t <- 0.5
-scale <- "gap"
-
-gen_RecData <- function (seed, n_scl = 1.5, alpha_r, alpha_t, scale = "gap") {
+gen_RecData <- function (seed, n, n_scl = 1.5, alpha_r, alpha_t, scale = "gap") {
   
   set.seed(seed)
-  n_target <- 500 # target number of observational units
-  n <- n_target * n_scl
+  n_target <- n # target number of observational units
+  n <- n * n_scl
   n_i <- 15  # number of (planned) encounters per unit
   tmax <- 7 # maximum follow-up time (type I censoring)
   remove(n_scl)
