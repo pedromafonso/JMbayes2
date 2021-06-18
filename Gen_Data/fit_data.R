@@ -3,8 +3,8 @@ desc <- "gap time"
 ################################################################################
 ## fit data
 dataL <- readRDS(file = paste0("Gen_Data/dataL_", ref,".rds"))
-n_data <- 2 #length(dataL)
-n_cores <- 4 #max(parallel::detectCores() - 1L, 1L)
+n_data <- length(dataL)
+n_cores <- max(parallel::detectCores() - 1L, 1L)
 #
 n_chains <- 3L
 ncl_in <- min(n_chains, n_cores) # number of inner clusters (per outer cluster)
