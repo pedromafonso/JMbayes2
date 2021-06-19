@@ -1,8 +1,8 @@
-ref <- "01"
-desc <- "gap time"
-n_data <- 4L
+ref <- "02"
+desc <- "calendar time"
+n_data <- 200L
 n <- 500L
-scale <- "gap"
+scale <- "calendar"
 ################################################################################
 ## generate data
 n_cores <- max(parallel::detectCores() - 1, 1L)

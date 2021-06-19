@@ -1,7 +1,8 @@
-ref <- "01"
-desc <- "gap time"
-n_data <- 4L
-n <- 500
+ref <- "02"
+desc <- "calendar time"
+n_data <- 200L
+n <- 500L
+scale <- "calendar"
 ################################################################################
 estimates <- readRDS(file = paste0("Gen_Data/estimates_", ref,".rds"))
 dur_min   <- readRDS(file = paste0("Gen_Data/dur_min_", ref,".rds"))
