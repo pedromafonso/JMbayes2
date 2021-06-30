@@ -88,7 +88,7 @@ void update_b (field<mat> &b, mat &b_mat, field<vec> &eta,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
                any_interval, which_interval,
-               frailty_h, frailty_H, alphaF_h, alphaF_H); //!! new
+               frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
 
     // logLik_re
     vec logLik_re_proposed = log_re(proposed_b_mat, L, sds);

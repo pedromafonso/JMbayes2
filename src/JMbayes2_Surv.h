@@ -75,7 +75,7 @@ void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
                any_interval, which_interval,
-               frailty_h, frailty_H, alphaF_h, alphaF_H); //!! new
+               frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
     double numerator_surv =
       sum(logLik_surv_proposed) +
       logPrior_surv(proposed_bs_gammas, gammas, alphas, prior_mean_bs_gammas,
@@ -144,7 +144,7 @@ void update_gammas (const vec &bs_gammas, vec &gammas, const vec &alphas,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
                any_interval, which_interval,
-               frailty_h, frailty_H, alphaF_h, alphaF_H); //!! new
+               frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
     double numerator_surv =
       sum(logLik_surv_proposed) +
       logPrior_surv(bs_gammas, proposed_gammas, alphas, prior_mean_bs_gammas,
@@ -214,7 +214,7 @@ void update_alphas (const vec &bs_gammas, const vec &gammas, vec &alphas,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
                any_interval, which_interval,
-               frailty_h, frailty_H, alphaF_h, alphaF_H); //!! new
+               frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
     double numerator_surv =
       sum(logLik_surv_proposed) +
       logPrior_surv(bs_gammas, gammas, proposed_alphas, prior_mean_bs_gammas,

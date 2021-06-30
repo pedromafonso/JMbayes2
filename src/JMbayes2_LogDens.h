@@ -90,15 +90,15 @@ vec log_long (const field<mat> &y, const field<vec> &eta, const vec &sigmas,
 }
 
 vec log_surv (const vec &W0H_bs_gammas, const vec &W0h_bs_gammas,
-                 const vec &W0H2_bs_gammas, const vec &WH_gammas,
-                 const vec &Wh_gammas, const vec &WH2_gammas,
-                 const vec &WlongH_alphas, const vec &Wlongh_alphas,
-                 const vec &WlongH2_alphas, const vec &log_Pwk, const vec &log_Pwk2,
-                 const uvec &indFast_H, const uvec &indFast_h, const uvec &which_event,
-                 const uvec &which_right_event, const uvec &which_left,
-                 const bool &any_interval, const uvec &which_interval,
-                 const vec &frailty_h, const vec &frailty_H, //!! new
-                 const vec &alphaF_h, const vec &alphaF_H) { //!! new
+              const vec &W0H2_bs_gammas, const vec &WH_gammas,
+              const vec &Wh_gammas, const vec &WH2_gammas,
+              const vec &WlongH_alphas, const vec &Wlongh_alphas,
+              const vec &WlongH2_alphas, const vec &log_Pwk, const vec &log_Pwk2,
+              const uvec &indFast_H, const uvec &indFast_h, const uvec &which_event,
+              const uvec &which_right_event, const uvec &which_left,
+              const bool &any_interval, const uvec &which_interval,
+              const vec &frailty_H, const vec &frailty_h, //!! new
+              const vec &alphaF_H, const vec &alphaF_h) { //!! new
   vec lambda_H = W0H_bs_gammas + WH_gammas + WlongH_alphas + 
     frailty_H % alphaF_H; //!! new
   vec H = group_sum(exp(log_Pwk + lambda_H), indFast_H);
@@ -106,7 +106,7 @@ vec log_surv (const vec &W0H_bs_gammas, const vec &W0h_bs_gammas,
   vec lambda_h(n);
   lambda_h.rows(which_event) = W0h_bs_gammas.rows(which_event) +
     Wh_gammas.rows(which_event) + Wlongh_alphas.rows(which_event) + 
-    + frailty_h.rows(which_event) % alphaF_h.rows(which_event); //!! new;
+    frailty_h.rows(which_event) % alphaF_h.rows(which_event); //!! new;
   vec out(n);
   out.rows(which_right_event) = - H.rows(which_right_event);
   out.rows(which_event) += lambda_h.rows(which_event);
@@ -178,7 +178,9 @@ vec logLik_jm_stripped (
     const vec &log_Pwk, const vec &log_Pwk2,
     const uvec &id_H_fast, const uvec &id_h_fast,
     const uvec &which_event, const uvec &which_right_event,
-    const uvec &which_left, const uvec &which_interval) {
+    const uvec &which_left, const uvec &which_interval,
+    const vec &frailty_H, const vec &frailty_h, //!! new
+    const vec &alphaF_H, const vec &alphaF_h) { //!! new
   uword n = b.at(0).n_rows;
   /////////////
   field<vec> betas_ = betas;
@@ -239,7 +241,8 @@ vec logLik_jm_stripped (
              WlongH_alphas, Wlongh_alphas, WlongH2_alphas,
              log_Pwk, log_Pwk2, id_H_fast, id_h_fast,
              which_event, which_right_event, which_left,
-             any_interval, which_interval);
+             any_interval, which_interval,
+             frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
   mat b_mat = docall_cbindF(b);
   vec logLik_re = log_re(b_mat, L, sds);
   vec out = logLik_long + logLik_surv + logLik_re;
