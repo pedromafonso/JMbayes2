@@ -179,8 +179,8 @@ vec logLik_jm_stripped (
     const uvec &id_H_fast, const uvec &id_h_fast,
     const uvec &which_event, const uvec &which_right_event,
     const uvec &which_left, const uvec &which_interval,
-    const vec &frailty_H, const vec &frailty_h, //!! new
-    const vec &alphaF_H, const vec &alphaF_h) { //!! new
+    const double &alphaF, const vec &frailty, //!! new
+    const uvec &which_term_h, const uvec &which_term_H) { //!! new
   uword n = b.at(0).n_rows;
   /////////////
   field<vec> betas_ = betas;
@@ -235,6 +235,14 @@ vec logLik_jm_stripped (
                       FunForms, FunForms_ind, Funs_FunForms);
     WlongH2_alphas = Wlong_H2 * alphas_;
   }
+  vec alphaF_H = WH_gammas.ones(); //!! new
+  vec alphaF_h = Wh_gammas.ones(); //!! new
+  alphaF_H.rows(which_term_h).fill(alphaF); //!! new
+  alphaF_h.rows(which_term_H).fill(alphaF); //!! new
+  vec frailty_H = WH_gammas.zeros(); //!! new
+  vec frailty_h = Wh_gammas.zeros();; //!! new
+  frailty_h = frailty.rows(id_h); //!! new
+  frailty_H = frailty.rows(id_H_); //!! new
   vec logLik_surv =
     log_surv(W0H_bs_gammas, W0h_bs_gammas, W0H2_bs_gammas,
              WH_gammas, Wh_gammas, WH2_gammas,

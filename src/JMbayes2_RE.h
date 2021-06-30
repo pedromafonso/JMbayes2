@@ -41,8 +41,8 @@ void update_b (field<mat> &b, mat &b_mat, field<vec> &eta,
                const bool &save_random_effects,
                const uword &n_burnin, const uword &n_iter, 
                const uword &GK_k, mat &cumsum_b, cube &outprod_b,
-               const vec &frailty_h, const vec &frailty_H, //!! new
-               const vec &alphaF_h, const vec &alphaF_H) { //!! new
+               const vec &frailty_H, const vec &frailty_h, //!! new
+               const vec &alphaF_H, const vec &alphaF_h) { //!! new
   uword n = b_mat.n_rows;
   uword nRE = b_mat.n_cols;
   // calculate denominator_b

@@ -1,7 +1,7 @@
-# jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
-#                 functional_forms = NULL, data_Surv = NULL, id_var = NULL,
-#                 priors = NULL, control = NULL, ...) {
-#     call <- match.call() #!! uncomment
+jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
+                functional_forms = NULL, data_Surv = NULL, id_var = NULL,
+                priors = NULL, control = NULL, ...) {
+    call <- match.call() #!! uncomment
     # control argument:
     # - GK_k: number of quadrature points for the Gauss Kronrod rule; options 15 and 7
     # - Bsplines_degree: the degree of the splines in each basis; default quadratic splines
@@ -20,7 +20,7 @@
                 n_thin = 1L, seed = 123L, MALA = FALSE,
                 save_random_effects = FALSE,
                 cores = max(parallel::detectCores() - 1, 1))
-    # control <- c(control, list(...)) #!! uncomment
+    control <- c(control, list(...)) #!! uncomment
     namC <- names(con)
     con[(namc <- names(control))] <- control
     if (length(noNms <- namc[!namc %in% namC]) > 0) {
@@ -652,4 +652,4 @@
                        priors = priors, call = call))
     class(out) <- "jm"
     out
-#}
+}
