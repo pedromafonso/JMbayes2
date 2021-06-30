@@ -10,7 +10,7 @@
 using namespace Rcpp;
 using namespace arma;
 
-double logPrior_surv (
+double logPrior_surv ( //?? do I need to update this function?
     const vec &bs_gammas, const vec&gammas, const vec &alphas,
     const field<vec> &prior_mean_bs_gammas, field<mat> &prior_Tau_bs_gammas,
     const vec &tau_bs_gammas,
@@ -55,8 +55,8 @@ void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
                        const mat &W0_H, const mat &W0_h, const mat &W0_H2,
                        vec &scale_bs_gammas, mat &acceptance_bs_gammas,
                        mat &res_bs_gammas,
-                       const vec &frailty_h, const vec &frailty_H, //!! new
-                       const vec &alphaF_h, const vec &alphaF_H) { //!! new
+                       const vec &frailty_H, const vec &frailty_h, //!! new
+                       const vec &alphaF_H, const vec &alphaF_h) { //!! new
   for (uword i = 0; i < bs_gammas.n_rows; ++i) {
     vec proposed_bs_gammas = propose_norm(bs_gammas, scale_bs_gammas, i);
     vec proposed_W0H_bs_gammas = W0_H * proposed_bs_gammas;
@@ -124,8 +124,8 @@ void update_gammas (const vec &bs_gammas, vec &gammas, const vec &alphas,
                     /////
                     const mat &W_H, const mat &W_h, const mat &W_H2,
                     vec &scale_gammas, mat &acceptance_gammas, mat &res_gammas,
-                    const vec &frailty_h, const vec &frailty_H, //!! new
-                    const vec &alphaF_h, const vec &alphaF_H) { //!! new
+                    const vec &frailty_H, const vec &frailty_h, //!! new
+                    const vec &alphaF_H, const vec &alphaF_h) { //!! new
   for (uword i = 0; i < gammas.n_rows; ++i) {
     vec proposed_gammas = propose_norm(gammas, scale_gammas, i);
     vec proposed_WH_gammas = W_H * proposed_gammas;
@@ -194,8 +194,8 @@ void update_alphas (const vec &bs_gammas, const vec &gammas, vec &alphas,
                     /////
                     const mat &Wlong_H, const mat &Wlong_h, const mat &Wlong_H2,
                     vec &scale_alphas, mat &acceptance_alphas, mat &res_alphas,
-                    const vec &frailty_h, const vec &frailty_H, //!! new
-                    const vec &alphaF_h, const vec &alphaF_H) { //!! new
+                    const vec &frailty_H, const vec &frailty_h, //!! new
+                    const vec &alphaF_H, const vec &alphaF_h) { //!! new
   for (uword i = 0; i < alphas.n_rows; ++i) {
     vec proposed_alphas = propose_norm(alphas, scale_alphas, i);
     vec proposed_WlongH_alphas = Wlong_H * proposed_alphas;

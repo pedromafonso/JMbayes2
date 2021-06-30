@@ -1,7 +1,7 @@
 jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                 functional_forms = NULL, data_Surv = NULL, id_var = NULL,
                 priors = NULL, control = NULL, ...) {
-    call <- match.call() #!! uncomment
+    call <- match.call()
     # control argument:
     # - GK_k: number of quadrature points for the Gauss Kronrod rule; options 15 and 7
     # - Bsplines_degree: the degree of the splines in each basis; default quadratic splines
@@ -20,10 +20,10 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                 n_thin = 1L, seed = 123L, MALA = FALSE,
                 save_random_effects = FALSE,
                 cores = max(parallel::detectCores() - 1, 1))
-    control <- c(control, list(...)) #!! uncomment
+    control <- c(control, list(...))
     namC <- names(con)
     con[(namc <- names(control))] <- control
-    if (length(noNms <- namc[!namc %in% namC]) > 0) {
+    if (length(noNms <- namc[!namc %in% namC]) > 0) { #!! new added the {}
         warning("unknown names in control: ", paste(noNms, collapse = ", "))
     }
     if (con$n_burnin > con$n_iter) {
@@ -157,7 +157,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     ind_FE_nHC <- mapply2(function (x, ind) x[-ind], ind_FE, x_in_z_base)
     has_tilde_betas <- as.integer(sapply(ind_FE_nHC, length) > 0)
     ind_FE_nHC[] <- lapply(ind_FE_nHC, function (x) if (length(x)) x else 0L)
-    if (any(!unlist(lapply(x_notin_z, is.na), use.names = FALSE)) && !any(namc %in% "n_iter")) { #?? why !any(namc %in% "n_iter"), instead of !"n_iter" %in% namc
+    if (any(!unlist(lapply(x_notin_z, is.na), use.names = FALSE)) && !any(namc %in% "n_iter")) { #?? suggestion: use !"n_iter" %in% namc instead 
         con$n_iter <- 6500L
     }
     ########################################################
@@ -173,7 +173,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     } else {
         dataS <- data_Surv
     }
-    if (inherits(dataS, "tbl_df") || inherits(dataS, "tbl")) {
+    if (inherits(dataS, "tbl_df") || inherits(dataS, "tbl")) { #!! new added the {}
         dataS <- as.data.frame(dataS)
     }
     # if the longitudinal outcomes are not in dataS, we set a random value for
@@ -319,9 +319,6 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     if (length(which_interval)) {
         Time_integration2[which_interval] <- Time_right[which_interval]
     }
-    
-    #?? with recurrent events the interval censoring can applies for both the 
-    # tsart and the tstop. The current implementation does not allow that.
 
     # create Gauss Kronrod points and weights
     GK <- gaussKronrod(con$GK_k)
@@ -339,7 +336,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
         log_Pwk2 <- rep(log(P2), each = length(sk)) +
             rep_len(log(GK$wk), length.out = length(st2))
     } else {
-        P2 <- st2 <- log_Pwk2 <- rep(0.0, nT * con$GK_k) #?? why nT (number of subjects)? we have multiple events per subject
+        P2 <- st2 <- log_Pwk2 <- rep(0.0, nT * con$GK_k)
     }
 
     # knots for the log baseline hazard function
@@ -353,7 +350,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
             knots(x[1L], x[2L], con$base_hazard_segments,
                   con$Bsplines_degree))
     }
-
+    
     # Extract functional forms per longitudinal outcome
     if (is.language(functional_forms)) {
         term_labels <- attr(terms(functional_forms), "term.labels")
@@ -394,7 +391,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     #####################################################
 
     # design matrices for the survival submodel:
-    #  - W0 is the design matrix for the log baseline hazard #?? why log-baseline hazard, and not baseline hazard?
+    #  - W0 is the design matrix for the log baseline hazard
     #  - W is the design matrix for the covariates in the Surv_object
     #    (including exogenous time-varying covariates)
     #  - X is the design matrix for the fixed effects, per outcome and functional form
@@ -506,13 +503,13 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                  Time_right = Time_right, Time_left = Time_left, Time_start = Time_start,
                  delta = delta, which_event = which_event, which_right = which_right,
                  which_left = which_left, which_interval = which_interval,
-                 recurrent = !isFALSE(recurrent), which_term_h = which(strata == 2), ##!! new
-                 which_term_H = which(strata_H == 2), ##!! new #?? not sure if all terminal strata will be 2 (it could be other value?)
                  W0_H = W0_H, W_H = W_H, X_H = X_H, Z_H = Z_H, U_H = U_H,
                  W0_h = W0_h, W_h = W_h, X_h = X_h, Z_h = Z_h, U_h = U_h,
                  W0_H2 = W0_H2, W_H2 = W_H2, X_H2 = X_H2, Z_H2 = Z_H2, U_H2 = U_H2,
                  log_Pwk = log_Pwk, log_Pwk2 = log_Pwk2,
-                 ind_RE = ind_RE, extra_parms = extra_parms)
+                 ind_RE = ind_RE, extra_parms = extra_parms,
+                 recurrent = !isFALSE(recurrent), which_term_h = which(strata == 2), ##!! new
+                 which_term_H = which(strata_H == 2)) ##!! new #?? not sure if all terminal strata will be 2 (could it be other value?)
     ############################################################################
     ############################################################################
     # objects to export
@@ -544,13 +541,13 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     D_lis <- lapply(Mixed_objects, extract_D)
     D <- bdiag(D_lis)
     b <- mapply2(extract_b, Mixed_objects, unq_idL, MoreArgs = list(n = nY))
-    frailty <- rep(0.0, nT) #!! new #?? not sure what would be the ideal initial value
     #init_surv <- init_vals_surv(Data, model_info, data, betas, b, con)
     bs_gammas <- rep(-0.1, ncol(W0_H))
     gammas <- if (inherits(Surv_object, "coxph")) coef(Surv_object) else
         -coef(Surv_object) / Surv_object$scale
     if (is.null(gammas)) gammas <- 0.0
     alphas <- rep(0.0, sum(sapply(U_H, ncol)))
+    frailty <- rep(0.0, nT) #!! new #?? not sure what would be the ideal initial value
     alphaF <- 0.0 #!! new
     initial_values <- list(betas = betas, log_sigmas = log_sigmas, D = D,
                            b = b, bs_gammas = bs_gammas, gammas = gammas,
@@ -595,18 +592,14 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                 A_xi_gammas = 0.5, B_xi_gammas = 1,
                 mean_alphas = lapply(alphas, "*", 0.0),
                 Tau_alphas = lapply(alphas, function (a) diag(1, length(a))),
-                mean_alphaF = 0.0, #!! new
-                Tau_alphaF = 1.0, #!! new
                 penalty_alphas = "none",
-                A_lambda_alphas = 0.5, B_lambda_alphas = 1.0, #?? not sure what these A_..._alphas, B_..._alphas are
+                A_lambda_alphas = 0.5, B_lambda_alphas = 1.0,
                 A_tau_alphas = 0.5, B_tau_alphas = 1.0,
                 A_nu_alphas = 0.5, B_nu_alphas = 1.0,
                 A_xi_alphas = 0.5, B_xi_alphas = 1.0,
                 gamma_prior_D_sds = TRUE,
                 D_sds_df = 3.0, D_sds_sigma = rep(2.5, nrow(D)),
                 D_sds_shape = 5.0, D_sds_mean = sqrt(diag(D)),
-                sigmaF_sds_df = 3.0, sigmaF_sds_sigma = 2.5, #!! new #?? not sure yet what all this params mean. but I believe its from an half-t distribution
-                sigmaF_sds_shape = 5.0, sigmaF_sds_mean = 1.0, #!! new #?? not sure which would be the best value for sigmaF_sds_mean, use an empirical estimate
                 D_L_etaLKJ = 3.0, gamma_prior_sigmas = TRUE,
                 sigmas_df = 3.0,
                 sigmas_sigmas = rep(5.0, length(log_sigmas)),

@@ -1,10 +1,3 @@
-model_data <- Data
-model_info <- model_info
-initial_values <- initial_values
-control <- con
-priors <- priors
-call <- call
-
 jm_fit <- function (model_data, model_info, initial_values, priors, control) {
     # extract family names
     model_info$family_names <- sapply(model_info$families, "[[", "family")
@@ -174,9 +167,11 @@ jm_fit <- function (model_data, model_info, initial_values, priors, control) {
     }
     parms <- c("bs_gammas", "tau_bs_gammas", "gammas", "alphas", "W_std_gammas",
                "Wlong_std_alphas", "D", paste0("betas", seq_along(model_data$X)),
-               "sigmas")
+               "sigmas",
+               "alphaF", "frailty") #!! new
     parms2 <- c("bs_gammas", "gammas", "alphas", "L", "sds", "betas", "b",
-                "sigmas")
+                "sigmas",
+                "alphaF", "frailty") #!! new
     if (control$save_random_effects) parms <- c(parms, "b")
     if (!length(attr(model_info$terms$terms_Surv_noResp, "term.labels")))
         parms <- parms[parms != "gammas"]
