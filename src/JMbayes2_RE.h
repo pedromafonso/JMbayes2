@@ -40,7 +40,9 @@ void update_b (field<mat> &b, mat &b_mat, field<vec> &eta,
                const uword &it, mat &acceptance_b, cube &res_b, cube &res_b_last, 
                const bool &save_random_effects,
                const uword &n_burnin, const uword &n_iter, 
-               const uword &GK_k, mat &cumsum_b, cube &outprod_b) {
+               const uword &GK_k, mat &cumsum_b, cube &outprod_b,
+               const vec &frailty_h, const vec &frailty_H, //!! new
+               const vec &alphaF_h, const vec &alphaF_H) { //!! new
   uword n = b_mat.n_rows;
   uword nRE = b_mat.n_cols;
   // calculate denominator_b
@@ -85,8 +87,8 @@ void update_b (field<mat> &b, mat &b_mat, field<vec> &eta,
                WlongH2_alphas_proposed,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
-               any_interval, which_interval);
-
+               any_interval, which_interval,
+               frailty_h, frailty_H, alphaF_h, alphaF_H); //!! new
 
     // logLik_re
     vec logLik_re_proposed = log_re(proposed_b_mat, L, sds);

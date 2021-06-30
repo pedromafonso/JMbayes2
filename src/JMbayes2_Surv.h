@@ -54,7 +54,9 @@ void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
                        /////
                        const mat &W0_H, const mat &W0_h, const mat &W0_H2,
                        vec &scale_bs_gammas, mat &acceptance_bs_gammas,
-                       mat &res_bs_gammas) {
+                       mat &res_bs_gammas,
+                       const vec &frailty_h, const vec &frailty_H, //!! new
+                       const vec &alphaF_h, const vec &alphaF_H) { //!! new
   for (uword i = 0; i < bs_gammas.n_rows; ++i) {
     vec proposed_bs_gammas = propose_norm(bs_gammas, scale_bs_gammas, i);
     vec proposed_W0H_bs_gammas = W0_H * proposed_bs_gammas;
@@ -72,7 +74,8 @@ void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
                WlongH_alphas, Wlongh_alphas, WlongH2_alphas,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
-               any_interval, which_interval);
+               any_interval, which_interval,
+               frailty_h, frailty_H, alphaF_h, alphaF_H); //!! new
     double numerator_surv =
       sum(logLik_surv_proposed) +
       logPrior_surv(proposed_bs_gammas, gammas, alphas, prior_mean_bs_gammas,
@@ -120,7 +123,9 @@ void update_gammas (const vec &bs_gammas, vec &gammas, const vec &alphas,
                     vec &logLik_surv, double &denominator_surv, const uword &it,
                     /////
                     const mat &W_H, const mat &W_h, const mat &W_H2,
-                    vec &scale_gammas, mat &acceptance_gammas, mat &res_gammas) {
+                    vec &scale_gammas, mat &acceptance_gammas, mat &res_gammas,
+                    const vec &frailty_h, const vec &frailty_H, //!! new
+                    const vec &alphaF_h, const vec &alphaF_H) { //!! new
   for (uword i = 0; i < gammas.n_rows; ++i) {
     vec proposed_gammas = propose_norm(gammas, scale_gammas, i);
     vec proposed_WH_gammas = W_H * proposed_gammas;
@@ -138,7 +143,8 @@ void update_gammas (const vec &bs_gammas, vec &gammas, const vec &alphas,
                WlongH_alphas, Wlongh_alphas, WlongH2_alphas,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
-               any_interval, which_interval);
+               any_interval, which_interval,
+               frailty_h, frailty_H, alphaF_h, alphaF_H); //!! new
     double numerator_surv =
       sum(logLik_surv_proposed) +
       logPrior_surv(bs_gammas, proposed_gammas, alphas, prior_mean_bs_gammas,
@@ -187,7 +193,9 @@ void update_alphas (const vec &bs_gammas, const vec &gammas, vec &alphas,
                     vec &logLik_surv, double &denominator_surv, const uword &it,
                     /////
                     const mat &Wlong_H, const mat &Wlong_h, const mat &Wlong_H2,
-                    vec &scale_alphas, mat &acceptance_alphas, mat &res_alphas) {
+                    vec &scale_alphas, mat &acceptance_alphas, mat &res_alphas,
+                    const vec &frailty_h, const vec &frailty_H, //!! new
+                    const vec &alphaF_h, const vec &alphaF_H) { //!! new
   for (uword i = 0; i < alphas.n_rows; ++i) {
     vec proposed_alphas = propose_norm(alphas, scale_alphas, i);
     vec proposed_WlongH_alphas = Wlong_H * proposed_alphas;
@@ -205,7 +213,8 @@ void update_alphas (const vec &bs_gammas, const vec &gammas, vec &alphas,
                proposed_WlongH_alphas, proposed_Wlongh_alphas, proposed_WlongH2_alphas,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
-               any_interval, which_interval);
+               any_interval, which_interval,
+               frailty_h, frailty_H, alphaF_h, alphaF_H); //!! new
     double numerator_surv =
       sum(logLik_surv_proposed) +
       logPrior_surv(bs_gammas, gammas, proposed_alphas, prior_mean_bs_gammas,

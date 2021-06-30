@@ -1,3 +1,10 @@
+model_data <- Data
+model_info <- model_info
+initial_values <- initial_values
+control <- con
+priors <- priors
+call <- call
+
 jm_fit <- function (model_data, model_info, initial_values, priors, control) {
     # extract family names
     model_info$family_names <- sapply(model_info$families, "[[", "family")

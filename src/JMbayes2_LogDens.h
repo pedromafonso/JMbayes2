@@ -96,13 +96,17 @@ vec log_surv (const vec &W0H_bs_gammas, const vec &W0h_bs_gammas,
                  const vec &WlongH2_alphas, const vec &log_Pwk, const vec &log_Pwk2,
                  const uvec &indFast_H, const uvec &indFast_h, const uvec &which_event,
                  const uvec &which_right_event, const uvec &which_left,
-                 const bool &any_interval, const uvec &which_interval) {
-  vec lambda_H = W0H_bs_gammas + WH_gammas + WlongH_alphas;
+                 const bool &any_interval, const uvec &which_interval,
+                 const vec &frailty_h, const vec &frailty_H, //!! new
+                 const vec &alphaF_h, const vec &alphaF_H) { //!! new
+  vec lambda_H = W0H_bs_gammas + WH_gammas + WlongH_alphas + 
+    frailty_H % alphaF_H; //!! new
   vec H = group_sum(exp(log_Pwk + lambda_H), indFast_H);
   uword n = H.n_rows;
   vec lambda_h(n);
   lambda_h.rows(which_event) = W0h_bs_gammas.rows(which_event) +
-    Wh_gammas.rows(which_event) + Wlongh_alphas.rows(which_event);
+    Wh_gammas.rows(which_event) + Wlongh_alphas.rows(which_event) + 
+    + frailty_h.rows(which_event) % alphaF_h.rows(which_event); //!! new;
   vec out(n);
   out.rows(which_right_event) = - H.rows(which_right_event);
   out.rows(which_event) += lambda_h.rows(which_event);

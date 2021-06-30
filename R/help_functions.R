@@ -348,6 +348,12 @@ knots <- function (xl, xr, ndx, deg) {
     seq(xl - deg * dx, xr + deg * dx, by = dx)
 }
 
+# time_points <- st
+# data <- dataS
+# times <- Time_start
+# ids <- paste0(idT, "_", strata)
+# time_var <- time_var
+
 SurvData_HazardModel <- function (time_points, data, times, ids, time_var) {
     unq_ids <- unique(ids)
     fids <- factor(ids, levels = unq_ids)
@@ -820,6 +826,10 @@ makepredictcall.tv <- function (var, call) {
     x
 }
 
+#times <- c(t(st - trunc_Time))
+#knots <- con$knots
+#ord <- con$Bsplines_degree + 1
+#strata  <- strata_H
 
 create_W0 <- function (times, knots, ord, strata) {
     W0 <- lapply(knots, splineDesign, x = times, ord = ord, outer.ok = TRUE)
@@ -991,6 +1001,12 @@ jitter2 <- function (x, factor = 2) {
         jitter(x, factor = factor)
     }
 }
+
+# time_points <- st
+# data <- dataS
+# times <- Time_start
+# ids <- paste0(idT, "_", strata) 
+# time_var <- time_var
 
 SurvData_HazardModel <- function (time_points, data, times, ids, time_var) {
     unq_ids <- unique(ids)
