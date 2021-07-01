@@ -293,7 +293,8 @@ jm_fit <- function (model_data, model_info, initial_values, priors, control) {
     mcmc_out$mlogLik <- mlogLik_jm(res_thetas, statistics$Mean[["b"]],
                           statistics$post_vars, model_data, model_info, control)
     ind <- names(thetas) %in% c("sigmas", "bs_gammas", "gammas", "alphas",
-                                "tau_bs_gammas")
+                                "tau_bs_gammas", 
+                                "alphaF", "frailty") #!! new
     thetas[ind] <- lapply(thetas[ind], rbind)
     thetas$betas <- lapply(thetas$betas, rbind)
     dim(thetas[["D"]]) <- c(dim(thetas[["D"]]), 1L)
