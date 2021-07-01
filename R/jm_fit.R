@@ -73,8 +73,7 @@ jm_fit <- function (model_data, model_info, initial_values, priors, control) {
     priors$mean_alphas <- unlist(priors$mean_alphas, use.names = FALSE)
     priors$Tau_alphas <- .bdiag(priors$Tau_alphas)
     # random seed
-    if (!exists(".Random.seed", envir = .GlobalEnv))
-        runif(1)
+    if (!exists(".Random.seed", envir = .GlobalEnv)) runif(1)
     RNGstate <- get(".Random.seed", envir = .GlobalEnv)
     on.exit(assign(".Random.seed", RNGstate, envir = .GlobalEnv))
     n_chains <- control$n_chains
@@ -153,7 +152,7 @@ jm_fit <- function (model_data, model_info, initial_values, priors, control) {
     }
     keep_its <- seq(1L, control$n_iter - control$n_burnin, by = control$n_thin)
     convert2_mcmclist <- function (name) {
-        as.mcmc.list(lapply(out, function (x) {
+      as.mcmc.list(lapply(out, function (x) {
             kk <- x$mcmc[[name]]
             if (length(d <- dim(kk)) > 2) {
                 m <- matrix(0.0, d[3L], d[1L] * d[2L])
@@ -289,6 +288,8 @@ jm_fit <- function (model_data, model_info, initial_values, priors, control) {
     res_thetas[["betas"]] <-
         lapply(mcmc_out$mcmc[grep("^betas", names(mcmc_out$mcmc))], function (m)
             do.call("rbind", m))
+    res_thetas$frailty <- do.call("rbind", mcmc_out$mcmc$frailty) #!! new
+    res_thetas$alphaF  <- do.call("rbind", mcmc_out$mcmc$alphaF) #!! new
     mcmc_out$mlogLik <- mlogLik_jm(res_thetas, statistics$Mean[["b"]],
                           statistics$post_vars, model_data, model_info, control)
     ind <- names(thetas) %in% c("sigmas", "bs_gammas", "gammas", "alphas",

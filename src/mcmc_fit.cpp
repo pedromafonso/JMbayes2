@@ -286,6 +286,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                   tau_gammas, shrink_gammas,
                   mean_alphas, Tau_alphas, lambda_alphas,
                   tau_alphas, shrink_alphas);
+  
   //
   vec logLik_re = log_re(b_mat, L, sds);
   //
@@ -294,6 +295,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                              idL_lp_fast, unq_idL, n_b);
   //
   for (uword it = 0; it < n_iter; ++it) {
+
     update_bs_gammas(bs_gammas, gammas, alphas,
                      W0H_bs_gammas, W0h_bs_gammas, W0H2_bs_gammas,
                      WH_gammas, Wh_gammas, WH2_gammas,
@@ -390,12 +392,13 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
     if (recurrent) { //!! new
       // update frailty
       res_frailty.row(it) = frailty.t();
-      acceptance_frailty.row(it) = frailty.ones().t();
+      vec temp(frailty.n_rows, fill::ones);
+      acceptance_frailty.row(it) = temp.t();
       // update alphaF
       res_alphaF.row(it) = alphaF;
       acceptance_alphaF.row(it) = 1.0;
     }
-    
+
     ////////////////////////////////////////////////////////////////////////
 
     if (it > 99) {
@@ -688,12 +691,16 @@ arma::mat mlogLik_jm (List res_thetas, arma::mat mean_b_mat, arma::cube post_var
   uvec id_H = as<uvec>(model_data["id_H"]) - 1;
   uvec id_H_fast = create_fast_ind(id_H + 1);
   uvec id_h_fast = create_fast_ind(id_h + 1);
+  mat alphaF = trans(as<mat>(res_thetas["alphaF"])); //!! new
+  mat frailty = trans(as<mat>(res_thetas["frailty"])); //!! new
+  uvec which_term_h = as<uvec>(model_data["which_term_h"]) - 1; //!! new
+  uvec which_term_H = as<uvec>(model_data["which_term_H"]) - 1; //!! new
   /////////////
   mat out(n, K);
   field<vec> betas_i(betas.n_elem);
   for (uword i = 0; i < K; ++i) {
     for (uword j = 0; j < betas.n_elem; ++j) betas_i.at(j) = betas.at(j).col(i);
-    vec oo = logLik_jm_stripped_old( //?? change
+    vec oo = logLik_jm_stripped(
       betas_i, mean_b, sigmas.col(i), bs_gammas.col(i), gammas.col(i),
       alphas.col(i), tau_bs_gammas.col(i), L.slice(i), sds.col(i),
       ///
@@ -703,7 +710,8 @@ arma::mat mlogLik_jm (List res_thetas, arma::mat mean_b_mat, arma::cube post_var
       U_H, U_h, U_H2, Wlong_bar, Wlong_sds, W_sds, any_event, any_interval, any_gammas,
       FunForms, FunForms_ind, Funs_FunForms, id_H_, id_h, log_Pwk, log_Pwk2,
       id_H_fast, id_h_fast, which_event, which_right_event, which_left,
-      which_interval);
+      which_interval,
+      alphaF.at(i), frailty.col(i), which_term_H, which_term_h); //!! new
     oo += 0.5 * ((double)mean_b_mat.n_cols * log2pi + log_det_post_vars);
     out.col(i) = oo;
   }
