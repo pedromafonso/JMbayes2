@@ -277,7 +277,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
              log_Pwk, log_Pwk2, id_H_fast, id_h_fast,
              which_event, which_right_event, which_left,
              any_interval, which_interval,
-             frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+             recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
   double denominator_surv =
     sum(logLik_surv) +
     logPrior_surv(bs_gammas, gammas, alphas, mean_bs_gammas, //?? do I need to update this?
@@ -312,7 +312,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                      /////
                      W0_H, W0_h, W0_H2, scale_bs_gammas, acceptance_bs_gammas,
                      res_bs_gammas,
-                     frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+                     recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
 
     ////////////////////////////////////////////////////////////////////////
 
@@ -345,7 +345,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                     /////
                     W_H, W_h, W_H2, scale_gammas, acceptance_gammas,
                     res_gammas,
-                    frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+                    recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
       res_W_std_gammas.at(it) = as_scalar(W_std * gammas);
 
       if (shrink_gammas) {
@@ -375,7 +375,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                   /////
                   Wlong_H, Wlong_h, Wlong_H2, scale_alphas,
                   acceptance_alphas, res_alphas,
-                  frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+                  recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
 
     res_Wlong_std_alphas.at(it) = as_scalar(Wlong_std * alphas);
 
@@ -424,7 +424,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
              which_interval, any_event, any_interval, ni_event,
              L, sds, it, acceptance_b, res_b, res_b_last, save_random_effects,
              n_burnin, n_iter, GK_k, cumsum_b, outprod_b,
-             frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+             recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
 
     ////////////////////////////////////////////////////////////////////
 
@@ -453,7 +453,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                  WH_gammas, Wh_gammas, WH2_gammas,
                  log_Pwk, log_Pwk2, id_H_fast, id_h_fast, which_event,
                  which_right_event, which_left, which_interval, unq_idL, n_burnin,
-                 frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+                 recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
 
     // update intercepts
     for (uword j = 0; j < y.n_elem; ++j) {
@@ -593,6 +593,7 @@ arma::vec logLik_jm (List thetas, List model_data, List model_info,
   vec frailty = as<vec>(thetas["frailty"]); //!! new
   uvec which_term_h = as<uvec>(model_data["which_term_h"]) - 1; //!! new
   uvec which_term_H = as<uvec>(model_data["which_term_H"]) - 1; //!! new
+  bool recurrent = as<bool>(model_data["recurrent"]); //!! new
   /////////////
   vec out =
     logLik_jm_stripped(
@@ -605,7 +606,7 @@ arma::vec logLik_jm (List thetas, List model_data, List model_info,
       FunForms, FunForms_ind, Funs_FunForms, id_H_, id_h, log_Pwk, log_Pwk2,
       id_H_fast, id_h_fast, which_event, which_right_event, which_left,
       which_interval,
-      alphaF, frailty, which_term_H, which_term_h); //!! new
+      recurrent, alphaF, frailty, which_term_H, which_term_h); //!! new
   return out;
 }
 
@@ -695,6 +696,7 @@ arma::mat mlogLik_jm (List res_thetas, arma::mat mean_b_mat, arma::cube post_var
   mat frailty = trans(as<mat>(res_thetas["frailty"])); //!! new
   uvec which_term_h = as<uvec>(model_data["which_term_h"]) - 1; //!! new
   uvec which_term_H = as<uvec>(model_data["which_term_H"]) - 1; //!! new
+  bool recurrent = as<bool>(model_data["recurrent"]); //!! new
   /////////////
   mat out(n, K);
   field<vec> betas_i(betas.n_elem);
@@ -711,7 +713,7 @@ arma::mat mlogLik_jm (List res_thetas, arma::mat mean_b_mat, arma::cube post_var
       FunForms, FunForms_ind, Funs_FunForms, id_H_, id_h, log_Pwk, log_Pwk2,
       id_H_fast, id_h_fast, which_event, which_right_event, which_left,
       which_interval,
-      alphaF.at(i), frailty.col(i), which_term_H, which_term_h); //!! new
+      recurrent, alphaF.at(i), frailty.col(i), which_term_H, which_term_h); //!! new
     oo += 0.5 * ((double)mean_b_mat.n_cols * log2pi + log_det_post_vars);
     out.col(i) = oo;
   }
@@ -866,7 +868,7 @@ arma::cube simulate_REs (List Data, List MCMC, List control) {
       WlongH2_alphas = Wlong_H2 * alphas_it;
     }
     vec logLik_surv =
-      log_surv_old(W0H_bs_gammas, W0h_bs_gammas, W0H2_bs_gammas, //!! new
+      log_surv_old(W0H_bs_gammas, W0h_bs_gammas, W0H2_bs_gammas, //?? update later
                    WH_gammas, Wh_gammas, WH2_gammas,
                    WlongH_alphas, Wlongh_alphas, WlongH2_alphas,
                    log_Pwk, log_Pwk2, indFast_H, indFast_h,
@@ -920,7 +922,7 @@ arma::cube simulate_REs (List Data, List MCMC, List control) {
         }
         //
         vec logLik_surv_proposed =
-          log_surv_old(W0H_bs_gammas, W0h_bs_gammas, W0H2_bs_gammas, //!! new
+          log_surv_old(W0H_bs_gammas, W0h_bs_gammas, W0H2_bs_gammas, //?? update later
                        WH_gammas, Wh_gammas, WH2_gammas,
                        WlongH_alphas_proposed, Wlongh_alphas_proposed,
                        WlongH2_alphas_proposed,
@@ -1039,7 +1041,7 @@ arma::mat cum_haz (const List &Data, const List &MCMC) {
                       id_H_, FunForms, FunForms_ind, Funs_FunForms);
     vec WlongH_alphas = Wlong_H * alphas_it;
     ///////////////////////
-    vec lambda_H = W0H_bs_gammas + WH_gammas + WlongH_alphas;
+    vec lambda_H = W0H_bs_gammas + WH_gammas + WlongH_alphas; //?? do i need to update something here?
     out.col(it) = group_sum(exp(log_Pwk + lambda_H), indFast_H);
   }
   return out;

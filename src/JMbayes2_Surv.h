@@ -55,7 +55,7 @@ void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
                        const mat &W0_H, const mat &W0_h, const mat &W0_H2,
                        vec &scale_bs_gammas, mat &acceptance_bs_gammas,
                        mat &res_bs_gammas,
-                       const vec &frailty_H, const vec &frailty_h, //!! new
+                       const bool recurrent, const vec &frailty_H, const vec &frailty_h, //!! new
                        const vec &alphaF_H, const vec &alphaF_h) { //!! new
   for (uword i = 0; i < bs_gammas.n_rows; ++i) {
     vec proposed_bs_gammas = propose_norm(bs_gammas, scale_bs_gammas, i);
@@ -75,7 +75,7 @@ void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
                any_interval, which_interval,
-               frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+               recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
     double numerator_surv =
       sum(logLik_surv_proposed) +
       logPrior_surv(proposed_bs_gammas, gammas, alphas, prior_mean_bs_gammas,
@@ -124,7 +124,7 @@ void update_gammas (const vec &bs_gammas, vec &gammas, const vec &alphas,
                     /////
                     const mat &W_H, const mat &W_h, const mat &W_H2,
                     vec &scale_gammas, mat &acceptance_gammas, mat &res_gammas,
-                    const vec &frailty_H, const vec &frailty_h, //!! new
+                    const bool recurrent, const vec &frailty_H, const vec &frailty_h, //!! new
                     const vec &alphaF_H, const vec &alphaF_h) { //!! new
   for (uword i = 0; i < gammas.n_rows; ++i) {
     vec proposed_gammas = propose_norm(gammas, scale_gammas, i);
@@ -144,7 +144,7 @@ void update_gammas (const vec &bs_gammas, vec &gammas, const vec &alphas,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
                any_interval, which_interval,
-               frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+               recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
     double numerator_surv =
       sum(logLik_surv_proposed) +
       logPrior_surv(bs_gammas, proposed_gammas, alphas, prior_mean_bs_gammas,
@@ -194,7 +194,7 @@ void update_alphas (const vec &bs_gammas, const vec &gammas, vec &alphas,
                     /////
                     const mat &Wlong_H, const mat &Wlong_h, const mat &Wlong_H2,
                     vec &scale_alphas, mat &acceptance_alphas, mat &res_alphas,
-                    const vec &frailty_H, const vec &frailty_h, //!! new
+                    const bool recurrent, const vec &frailty_H, const vec &frailty_h, //!! new
                     const vec &alphaF_H, const vec &alphaF_h) { //!! new
   for (uword i = 0; i < alphas.n_rows; ++i) {
     vec proposed_alphas = propose_norm(alphas, scale_alphas, i);
@@ -214,7 +214,7 @@ void update_alphas (const vec &bs_gammas, const vec &gammas, vec &alphas,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
                any_interval, which_interval,
-               frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+               recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
     double numerator_surv =
       sum(logLik_surv_proposed) +
       logPrior_surv(bs_gammas, gammas, proposed_alphas, prior_mean_bs_gammas,

@@ -41,7 +41,7 @@ void update_b (field<mat> &b, mat &b_mat, field<vec> &eta,
                const bool &save_random_effects,
                const uword &n_burnin, const uword &n_iter, 
                const uword &GK_k, mat &cumsum_b, cube &outprod_b,
-               const vec &frailty_H, const vec &frailty_h, //!! new
+               const bool recurrent, const vec &frailty_H, const vec &frailty_h, //!! new
                const vec &alphaF_H, const vec &alphaF_h) { //!! new
   uword n = b_mat.n_rows;
   uword nRE = b_mat.n_cols;
@@ -88,7 +88,7 @@ void update_b (field<mat> &b, mat &b_mat, field<vec> &eta,
                log_Pwk, log_Pwk2, indFast_H, indFast_h,
                which_event, which_right_event, which_left,
                any_interval, which_interval,
-               frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
+               recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
 
     // logLik_re
     vec logLik_re_proposed = log_re(proposed_b_mat, L, sds);
