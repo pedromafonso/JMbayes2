@@ -1,8 +1,9 @@
-ref <- "02"
-desc <- "calendar time"
-n_data <- 200L
+setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
+ref <- "08"
+desc <- "gap"
+n_data <- 100L
 n <- 500L
-scale <- "calendar"
+scale <- "gap"
 ################################################################################
 ## generate data
 n_cores <- max(parallel::detectCores() - 1, 1L)

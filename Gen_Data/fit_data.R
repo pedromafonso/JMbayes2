@@ -1,8 +1,9 @@
-ref <- "02"
-desc <- "calendar time"
-n_data <- 200L
+setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
+ref <- "08"
+desc <- "gap"
+n_data <- 100L
 n <- 500L
-scale <- "calendar"
+scale <- "gap"
 ################################################################################
 ## fit data
 dataL <- readRDS(file = paste0("Gen_Data/dataL_", ref,".rds"))
@@ -24,7 +25,7 @@ outer <- function(i, ncl_in){
                    data = dataL[[i]]$rec_strt)
   jm_fit <- jm(cox_fit, lme_fit, time_var = "time", 
                functional_forms = list("y" = ~ value(y) * strata),
-               cores = ncl_in, recurrent = (scale  == "gap"))
+               cores = ncl_in, recurrent = scale)
   timer <- difftime(Sys.time(), tic2, units = "mins")
   # get estimates
   lme_betas <- fixef(lme_fit)

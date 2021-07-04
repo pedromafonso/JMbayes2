@@ -1,8 +1,9 @@
-ref <- "02"
-desc <- "calendar time"
-n_data <- 200L
+setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
+ref <- "08"
+desc <- "gap"
+n_data <- 100L
 n <- 500L
-scale <- "calendar"
+scale <- "gap"
 ################################################################################
 estimates <- readRDS(file = paste0("Gen_Data/estimates_", ref,".rds"))
 dur_min   <- readRDS(file = paste0("Gen_Data/dur_min_", ref,".rds"))
