@@ -211,7 +211,7 @@ vec logLik_jm_stripped (
     const uvec &id_H_fast, const uvec &id_h_fast,
     const uvec &which_event, const uvec &which_right_event,
     const uvec &which_left, const uvec &which_interval,
-    const bool recurrent, const double &alphaF, const vec &frailty, //!! new
+    const bool &recurrent, const double &alphaF, const vec &frailty, //!! new
     const uvec &which_term_H, const uvec &which_term_h) { //!! new
   uword n = b.at(0).n_rows;
   /////////////

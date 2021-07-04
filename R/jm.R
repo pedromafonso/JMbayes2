@@ -508,7 +508,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                  W0_H2 = W0_H2, W_H2 = W_H2, X_H2 = X_H2, Z_H2 = Z_H2, U_H2 = U_H2,
                  log_Pwk = log_Pwk, log_Pwk2 = log_Pwk2,
                  ind_RE = ind_RE, extra_parms = extra_parms,
-                 recurrent = !isFALSE(recurrent), which_term_h = which(strata == 2), ##!! new
+                 recurrent = !isFALSE(recurrent), which_term_h = which(strata == 2), ##!! new $?? recurrent probably is better in the model info
                  which_term_H = which(strata_H == 2)) ##!! new #?? not sure if all terminal strata will be 2 (could it be other value?)
     ############################################################################
     ############################################################################

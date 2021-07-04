@@ -245,4 +245,65 @@ void update_alphas (const vec &bs_gammas, const vec &gammas, vec &alphas,
   }
 }
 
+void update_alphaF (const vec &bs_gammas, const vec &gammas, vec &alphas, //!! new
+                    const vec &W0H_bs_gammas, const vec &W0h_bs_gammas, const vec &W0H2_bs_gammas,
+                    const vec &WH_gammas, const vec &Wh_gammas, const vec &WH2_gammas,
+                    const vec &WlongH_alphas, const vec &Wlongh_alphas, const vec &WlongH2_alphas,
+                    const vec &log_Pwk, const vec &log_Pwk2,
+                    const uvec &indFast_H, const uvec &indFast_h,
+                    const uvec &which_event, const uvec &which_right_event,
+                    const uvec &which_left, const uvec &which_interval,
+                    const bool &any_event, const bool &any_interval,
+                    const field<vec> &prior_mean_bs_gammas, field<mat> &prior_Tau_bs_gammas,
+                    const vec &tau_bs_gammas,
+                    const vec &prior_mean_gammas, mat &prior_Tau_gammas,
+                    const vec &lambda_gammas, const double &tau_gammas, const bool &shrink_gammas,
+                    const vec &prior_mean_alphas, mat &prior_Tau_alphas,
+                    const vec &lambda_alphas, const double &tau_alphas, const bool &shrink_alphas,
+                    vec &logLik_surv, double &denominator_surv, const uword &it,
+                    /////
+                    const mat &Wlong_H, const mat &Wlong_h, const mat &Wlong_H2,
+                    /////
+                    vec &alphaF, //?? needs to be a vector of dimension one because propose_norm() expects a vector
+                    vec &scale_alphaF, vec &acceptance_alphaF, vec &res_alphaF, //!! new
+                    const bool recurrent, const vec &frailty_H, const vec &frailty_h, //!! new
+                    const uvec &which_term_H, const uvec &which_term_h,
+                    vec &alphaF_H, vec &alphaF_h) { //!! new
+    vec proposed_alphaF = propose_norm(alphaF, scale_alphaF, 1); //?? is allways 1 right? a vector of dimension 1
+    vec proposed_alphaF_H = WH_gammas.ones();
+    vec proposed_alphaF_h = Wh_gammas.ones();
+    proposed_alphaF_H.rows(which_term_H).fill(proposed_alphaF.at(1));
+    proposed_alphaF_h.rows(which_term_h).fill(proposed_alphaF.at(1)); 
+    vec logLik_surv_proposed =
+      log_surv(W0H_bs_gammas, W0h_bs_gammas, W0H2_bs_gammas,
+               WH_gammas, Wh_gammas, WH2_gammas,
+               WlongH_alphas, Wlongh_alphas, WlongH2_alphas,
+               log_Pwk, log_Pwk2, indFast_H, indFast_h,
+               which_event, which_right_event, which_left,
+               any_interval, which_interval,
+               recurrent, frailty_H, frailty_h, proposed_alphaF_H, proposed_alphaF_h); //!! new
+    double numerator_surv =
+      sum(logLik_surv_proposed) +
+      logPrior_surv(bs_gammas, gammas, alphas, prior_mean_bs_gammas, //?? needs to be updated
+                    prior_Tau_bs_gammas, tau_bs_gammas,
+                    prior_mean_gammas, prior_Tau_gammas, lambda_gammas, tau_gammas, shrink_gammas,
+                    prior_mean_alphas, prior_Tau_alphas, lambda_alphas, tau_alphas, shrink_alphas);
+    double log_ratio = numerator_surv - denominator_surv;
+    if (std::isfinite(log_ratio) && exp(log_ratio) > R::runif(0.0, 1.0)) {
+      alphaF = proposed_alphaF;
+      alphaF_H = proposed_alphaF_H;
+      alphaF_h = proposed_alphaF_h;
+      logLik_surv = logLik_surv_proposed;
+      denominator_surv = numerator_surv;
+      acceptance_alphaF.at(it) = 1;
+    }
+    if (it > 19) {
+      scale_alphaF.at(1) =
+        robbins_monro(scale_alphaF.at(1),
+                      acceptance_alphaF.at(it), it);
+    }
+    // store results
+    res_alphaF.at(it) = alphaF.at(1);
+}
+
 #endif
