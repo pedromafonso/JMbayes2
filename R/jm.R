@@ -65,18 +65,18 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
              "in the database of the longitudinal models.")
     }
     dataL <- dataL[order(idL, dataL[[time_var]]), ]
-
+    
     # extract terms from mixed models
     terms_FE <- lapply(Mixed_objects, extract_terms, which = "fixed", data = dataL)
     respVars <- lapply(terms_FE, function (tt) all.vars(attr(tt, "variables")[[2L]]))
     respVars_form <- sapply(terms_FE, function (tt) as.character(attr(tt, "variables"))[2L])
     terms_FE_noResp <- lapply(terms_FE, delete.response)
     terms_RE <- lapply(Mixed_objects, extract_terms, which = "random", data = dataL)
-
+    
     # create model frames
     mf_FE_dataL <- lapply(terms_FE, model.frame.default, data = dataL)
     mf_RE_dataL <- lapply(terms_RE, model.frame.default, data = dataL)
-
+    
     # we need to account for missing data in the fixed and random effects model frames,
     # in parallel across outcomes (i.e., we will allow that some subjects may have no data
     # for some outcomes)
@@ -84,7 +84,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     NAs_RE_dataL <- lapply(mf_RE_dataL, attr, "na.action")
     mf_FE_dataL <- mapply2(fix_NAs_fixed, mf_FE_dataL, NAs_FE_dataL, NAs_RE_dataL)
     mf_RE_dataL <- mapply2(fix_NAs_random, mf_RE_dataL, NAs_RE_dataL, NAs_FE_dataL)
-
+    
     # create response vectors
     y <- lapply(mf_FE_dataL, model.response)
     y <- lapply(y, function (yy) {
@@ -93,16 +93,16 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     if (any(sapply(y, function (x) any(!is.finite(x))))) {
         stop("infite value detected in some longitudinal outcomes. These are not allowed.\n")
     }
-
+    
     # extract families
     families <- lapply(Mixed_objects, "[[", "family")
     families[sapply(families, is.null)] <- rep(list(gaussian()),
                                                sum(sapply(families, is.null)))
-
+    
     # extra parameter in the families
     extra_parms <- sapply(families,
                           function (x) if (is.null(x$df)) 0.0 else x$df)
-
+    
     # create the idL per outcome
     # IMPORTANT: some ids may be missing when some subjects have no data for a particular outcome
     # This needs to be taken into account when using idL for indexing. Namely, a new id variable
@@ -120,7 +120,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     # this is relevant in the calculation of the log density / probability mass function
     # for the longitudinal outcomes
     unq_idL <- lapply(idL, unique)
-
+    
     # create design matrices for mixed models
     X <- mapply2(model.matrix.default, terms_FE, mf_FE_dataL)
     Xbar <- lapply(X, colMeans)
@@ -215,7 +215,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
         dataS <- dataS[-NAs_surv, ]
     }
     idT <- factor(idT, levels = unique(idT))
-
+    
     nT <- length(unique(idT))
     if (nY != nT) {
         stop("the number of groups/subjects in the longitudinal and survival datasets ",
@@ -291,13 +291,13 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
         unclass(strt)
     }
     n_strata <- length(unique(strata))
-
+    
     # check if we have competing risks or multi-state processes. In this case,
     # we will have multiple strata per subject. NOTE: this will also be the
     # case for recurrent events. We will need to change the definition of
     # CR_MS to account for this
     CR_MS <- any(tapply(strata, idT, function (x) length(unique(x))) > 1)
-
+    
     # 'Time_integration' is the upper limit of the integral in likelihood
     # of the survival model. For subjects with event (delta = 1), for subjects with
     # right censoring and for subjects with interval censoring we need to integrate
@@ -319,7 +319,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     if (length(which_interval)) {
         Time_integration2[which_interval] <- Time_right[which_interval]
     }
-
+    
     # create Gauss Kronrod points and weights
     GK <- gaussKronrod(con$GK_k)
     sk <- GK$sk
@@ -338,7 +338,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     } else {
         P2 <- st2 <- log_Pwk2 <- rep(0.0, nT * con$GK_k)
     }
-
+    
     # knots for the log baseline hazard function
     if (is.null(con$knots)) {
         qs <- if (recurrent == "gap") { #!! new
@@ -387,9 +387,9 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                                    function (x) x[sapply(x, length) > 0])
     collapsed_functional_forms <- lapply(FunForms_per_outcome, names)
     Funs_FunForms <- lapply(functional_forms, extractFuns_FunForms,
-                             data = dataS)
+                            data = dataS)
     #####################################################
-
+    
     # design matrices for the survival submodel:
     #  - W0 is the design matrix for the log baseline hazard
     #  - W is the design matrix for the covariates in the Surv_object

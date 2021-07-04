@@ -87,17 +87,17 @@ jm_fit <- function (model_data, model_info, initial_values, priors, control) {
       mcmc_cpp(model_data, model_info, initial_values, priors, control)
     }
     if (cores > 1L) {
-        cores <- min(cores, length(chains))
-        cl <- parallel::makeCluster(cores)
-        parallel::clusterSetRNGStream(cl = cl, iseed = control$seed)
-        out <- parallel::parLapply(cl, chains, mcmc_parallel,
-                                   model_data = model_data, model_info = model_info,
-                                   initial_values = initial_values,
-                                   priors = priors, control = control)
-        parallel::stopCluster(cl)
+      cores <- min(cores, length(chains))
+      cl <- parallel::makeCluster(cores)
+      parallel::clusterSetRNGStream(cl = cl, iseed = control$seed)
+      out <- parallel::parLapply(cl, chains, mcmc_parallel,
+                                 model_data = model_data, model_info = model_info,
+                                 initial_values = initial_values,
+                                 priors = priors, control = control)
+      parallel::stopCluster(cl)
     } else {
-        set.seed(control$seed)
-        out <- lapply(chains, mcmc_parallel, model_data = model_data,
+      set.seed(control$seed)
+      out <- lapply(chains, mcmc_parallel, model_data = model_data,
                     model_info = model_info, initial_values = initial_values,
                     priors = priors, control = control)
     }
@@ -152,7 +152,7 @@ jm_fit <- function (model_data, model_info, initial_values, priors, control) {
     }
     keep_its <- seq(1L, control$n_iter - control$n_burnin, by = control$n_thin)
     convert2_mcmclist <- function (name) {
-      as.mcmc.list(lapply(out, function (x) {
+        as.mcmc.list(lapply(out, function (x) {
             kk <- x$mcmc[[name]]
             if (length(d <- dim(kk)) > 2) {
                 m <- matrix(0.0, d[3L], d[1L] * d[2L])
