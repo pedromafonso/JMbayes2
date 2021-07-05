@@ -22,8 +22,9 @@ toc <- Sys.time()
 dir.create(paste0("Gen_Data/", ref))
 saveRDS(dataL, file = paste0("Gen_Data/", ref, "/dataL_", ref,".rds"))
 dur_min <- difftime(toc, tic, units = "min")
-file.copy(from = "Gen_Data/fit_data.R", 
-          to = paste0("Gen_Data/", ref, "/gen_data.R"), overwrite = TRUE)
+invisible(file.copy(from = "Gen_Data/fit_data.R", 
+                    to = paste0("Gen_Data/", ref, "/gen_data.R"), 
+                    overwrite = TRUE))
 RPushbullet::pbPost("note", 
                     title = paste0("RecData: gen complete (", 
                                    round(dur_min, 2), " min)"))

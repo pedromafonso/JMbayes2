@@ -55,8 +55,9 @@ source("Gen_Data/sim_funs.R") # to use par_diag()
 par_diag(n_data, n_chains, ncl_in, ncl_out, n_cores, diff_time)
 dur_min <- difftime(toc, tic1, units = "mins")
 saveRDS(dur_min, file = paste0("Gen_Data/", ref, "/dur_min_", ref,".rds"))
-file.copy(from = "Gen_Data/fit_data.R", 
-          to = paste0("Gen_Data/", ref, "/fit_data.R"), overwrite = TRUE)
+invisible(file.copy(from = "Gen_Data/fit_data.R", 
+                    to = paste0("Gen_Data/", ref, "/fit_data.R"), 
+                    overwrite = TRUE))
 RPushbullet::pbPost("note", 
                     title = paste0("RecData: fit complete (", 
                                    round(dur_min/60, 2), " h)"))
