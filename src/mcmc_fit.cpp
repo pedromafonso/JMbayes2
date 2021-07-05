@@ -396,6 +396,14 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
     }
 
     ////////////////////////////////////////////////////////////////////////
+    
+    if (recurrent) {
+      
+      res_alphaF.at(it, 1) = alphaF.at(1);
+    
+    }
+    
+    ////////////////////////////////////////////////////////////////////////
 
     if (it > 99) {
 
