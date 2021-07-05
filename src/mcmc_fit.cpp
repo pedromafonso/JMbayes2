@@ -399,7 +399,11 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
     
     if (recurrent) {
       
-      res_alphaF.at(it, 1) = alphaF.at(1);
+      // cout << res_alphaF.n_rows << "x" << res_alphaF.n_cols << endl;
+      // cout << res_alphaF.row(it).n_rows << "x" << res_alphaF.row(it).n_cols << endl;
+      // cout << alphaF.n_rows << "x" << alphaF.n_cols << endl;
+      // cout << alphaF.row(1).n_rows << "x" << alphaF.row(1).n_cols << endl;
+      res_alphaF.row(it) = alphaF;
     
     }
     
