@@ -260,8 +260,8 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   bool recurrent = as<bool>(model_data["recurrent"]); //!! new
   vec alphaF = as<vec>(initial_values["alphaF"]); //!! new
   vec frailty = as<vec>(initial_values["frailty"]); //!! new
-  alphaF.zeros(); //?? delete later
-  frailty.zeros(); //?? delete later 
+  //alphaF.zeros(); //?? delete later
+  //frailty.zeros(); //?? delete later 
   mat res_alphaF(n_iter, 1, fill::zeros); //!! new
   mat acceptance_alphaF(n_iter, 1, fill::zeros); //!! new
   mat res_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new

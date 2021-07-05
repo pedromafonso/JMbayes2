@@ -36,11 +36,14 @@ gen_RecData <- function (seed, n, n_scl = 1.5, alpha_r, alpha_t, scale = "gap") 
   ## parameters true values
   gammas_t <- c("(Intercept)" = -9, "Group" = 0.5, "Age" = 0.05) # phi = exp(Intercept)
   sigma_t <- 2
+  alphaF <- 0.25 # association frailty
+  sigmaF <- 0.25 # frailty SD
+  frailty <- rnorm(n, mean = 0, sd = sigmaF)
   ## terminal data
   group <- rep(0:1, each = n/2)
   age <- runif(n, 30, 70)
   W_t <- cbind("(Intercept)" = 1, "Group" = group, "Age" = age)
-  eta_t <- as.vector(W_t %*% gammas_t)
+  eta_t <- as.vector(W_t %*% gammas_t + alphaF * frailty) 
   invS_t <- function(t, u, i) {
     h <- function(s) { 
       NS <- splines::ns(s, knots = kn, Boundary.knots = Bkn)
@@ -87,7 +90,7 @@ gen_RecData <- function (seed, n, n_scl = 1.5, alpha_r, alpha_t, scale = "gap") 
   sigma_r <- 2
   ## recurring data
   W_r <- cbind("(Intercept)" = 1, "Group" = surv$group, "Age" = surv$age)
-  eta_r <- as.vector(W_r %*% gammas_r)
+  eta_r <- as.vector(W_r %*% gammas_r + frailty)
   b <- b[surv_na, , drop = FALSE]
   if(scale == "gap") {
     invS_r <- function(t, u, i, tstart) {
@@ -171,7 +174,8 @@ gen_RecData <- function (seed, n, n_scl = 1.5, alpha_r, alpha_t, scale = "gap") 
   remove(seed, tail_rows, new_rows)
   rec_strt <- rec_strt[, c("id", "tstart", "tstop", "status", "strata", "Rstatus", "Tstatus", "Stime", "gap", "age", "group", "seed")]
   
-  return(list(long = long, surv = surv, rec = rec, rec_strt = rec_strt))
+  return(list(long = long, surv = surv, rec = rec, rec_strt = rec_strt, 
+              frailty = frailty, alphaF = alphaF)) ##?? delete later
 }
 
 ################################################################################

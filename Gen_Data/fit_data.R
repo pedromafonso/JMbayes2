@@ -25,7 +25,8 @@ outer <- function(i, ncl_in){
                    data = dataL[[i]]$rec_strt)
   jm_fit <- jm(cox_fit, lme_fit, time_var = "time", 
                functional_forms = list("y" = ~ value(y) * strata),
-               cores = ncl_in, recurrent = scale)
+               cores = ncl_in, recurrent = scale, 
+               frailty = dataL[[i]]$frailty, alphaF = dataL[[i]]$alphaF) ##?? delete later
   timer <- difftime(Sys.time(), tic2, units = "mins")
   # get estimates
   lme_betas <- fixef(lme_fit)

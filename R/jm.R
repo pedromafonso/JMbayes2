@@ -1,6 +1,8 @@
 jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                 functional_forms = NULL, data_Surv = NULL, id_var = NULL,
-                priors = NULL, control = NULL, ...) {
+                priors = NULL, control = NULL, 
+                frailty = NULL, alphaF = NULL, ##?? delete later
+                ...) {
     call <- match.call()
     # control argument:
     # - GK_k: number of quadrature points for the Gauss Kronrod rule; options 15 and 7
@@ -553,8 +555,8 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
         -coef(Surv_object) / Surv_object$scale
     if (is.null(gammas)) gammas <- 0.0
     alphas <- rep(0.0, sum(sapply(U_H, ncol)))
-    frailty <- rep(0.0, nT) #!! new #?? not sure what would be the ideal initial value
-    alphaF <- 0.0 #!! new
+    #frailty <- rep(0.0, nT) #!! new #?? not sure what would be the ideal initial value #?? uncomment later
+    #alphaF <- 0.0 #!! new #?? uncomment later
     initial_values <- list(betas = betas, log_sigmas = log_sigmas,
                            sigmas = sigmas, D = D, b = b, bs_gammas = bs_gammas,
                            gammas = gammas, alphas = alphas,
