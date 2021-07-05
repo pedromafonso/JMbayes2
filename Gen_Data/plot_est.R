@@ -23,7 +23,7 @@ colnames(jm_est) <- c("beta1", "beta2", "beta3", "beta4",
                       "D[2,3]", "D[2,4]", "D[3,3]", "D[3,4]", "D[4,4]", 
                       "sigma",
                       "alpha_R", "alpha_T", 
-                      "gamma1_R", "gamma2_R", "gamma1_T", "gamma2_T")
+                      "gamma1_R", "gamma2_R", "gamma1_T", "gamma2_T", "alphaF")
 jm_est[, "gamma1_T"] <- rowSums(jm_est[, c("gamma1_R", "gamma1_T")])
 jm_est[, "gamma2_T"] <- rowSums(jm_est[, c("gamma2_R", "gamma2_T")])
 jm_est[, "alpha_T"]  <- rowSums(jm_est[, c("alpha_R", "alpha_T")])
@@ -55,12 +55,13 @@ true_values <- c("beta1"    = 6.94,
                  "gamma1_R" = 0.5,
                  "gamma2_R" = 0.05,
                  "gamma1_T" = 0.5,
-                 "gamma2_T" = 0.05)
+                 "gamma2_T" = 0.05,
+                 "alphaF"   = 0.25)
 
 prms <- c("beta1", "beta2", "beta3", "beta4",
           "D[1,1]", "D[2,2]", "D[3,3]", "D[4,4]", 
           "sigma", "gamma1_R", "gamma2_R", "gamma1_T", "gamma2_T",
-          "alpha_R", "alpha_T")
+          "alpha_R", "alpha_T", "alphaF")
 
 pdf(file = paste0("Gen_Data/plot_ref", ref,".pdf"),
     height = 10, width = 7.5)
