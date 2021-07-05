@@ -56,11 +56,10 @@ void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
                        vec &scale_bs_gammas, mat &acceptance_bs_gammas,
                        mat &res_bs_gammas,
                        //
-                       //
                        const bool &recurrent, //!! new
                        const vec &frailty_H, const vec &frailty_h, //!! new 
                        const vec &alphaF_H, const vec &alphaF_h //!! new
-                       ) {
+) {
   for (uword i = 0; i < bs_gammas.n_rows; ++i) {
     vec proposed_bs_gammas = propose_norm(bs_gammas, scale_bs_gammas, i);
     vec proposed_W0H_bs_gammas = W0_H * proposed_bs_gammas;

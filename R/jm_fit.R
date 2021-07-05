@@ -73,7 +73,8 @@ jm_fit <- function (model_data, model_info, initial_values, priors, control) {
     priors$mean_alphas <- unlist(priors$mean_alphas, use.names = FALSE)
     priors$Tau_alphas <- .bdiag(priors$Tau_alphas)
     # random seed
-    if (!exists(".Random.seed", envir = .GlobalEnv)) runif(1)
+    if (!exists(".Random.seed", envir = .GlobalEnv))
+        runif(1)
     RNGstate <- get(".Random.seed", envir = .GlobalEnv)
     on.exit(assign(".Random.seed", RNGstate, envir = .GlobalEnv))
     n_chains <- control$n_chains
@@ -87,17 +88,17 @@ jm_fit <- function (model_data, model_info, initial_values, priors, control) {
       mcmc_cpp(model_data, model_info, initial_values, priors, control)
     }
     if (cores > 1L) {
-      cores <- min(cores, length(chains))
-      cl <- parallel::makeCluster(cores)
-      parallel::clusterSetRNGStream(cl = cl, iseed = control$seed)
-      out <- parallel::parLapply(cl, chains, mcmc_parallel,
-                                 model_data = model_data, model_info = model_info,
-                                 initial_values = initial_values,
-                                 priors = priors, control = control)
-      parallel::stopCluster(cl)
+        cores <- min(cores, length(chains))
+        cl <- parallel::makeCluster(cores)
+        parallel::clusterSetRNGStream(cl = cl, iseed = control$seed)
+        out <- parallel::parLapply(cl, chains, mcmc_parallel,
+                                   model_data = model_data, model_info = model_info,
+                                   initial_values = initial_values,
+                                   priors = priors, control = control)
+        parallel::stopCluster(cl)
     } else {
-      set.seed(control$seed)
-      out <- lapply(chains, mcmc_parallel, model_data = model_data,
+        set.seed(control$seed)
+        out <- lapply(chains, mcmc_parallel, model_data = model_data,
                     model_info = model_info, initial_values = initial_values,
                     priors = priors, control = control)
     }

@@ -45,7 +45,7 @@ void update_b (field<mat> &b, mat &b_mat, field<vec> &eta,
                const bool &recurrent, //!! new
                const vec &frailty_H, const vec &frailty_h, //!! new 
                const vec &alphaF_H, const vec &alphaF_h //!! new
-               ) {
+) {
   uword n = b_mat.n_rows;
   uword nRE = b_mat.n_cols;
   // calculate denominator_b

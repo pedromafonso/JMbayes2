@@ -57,7 +57,7 @@ void update_betas (field<vec> &betas, mat &res_betas, field<vec> &acceptance_bet
                    const bool &recurrent, //!! new
                    const vec &frailty_H, const vec &frailty_h, //!! new 
                    const vec &alphaF_H, const vec &alphaF_h //!! new
-                   ) {
+                  ) {
   uword n_b = b_mat.n_rows;
   // FE in HC - Gibbs sampling
   vec betas_vec = docall_rbindF(betas);
@@ -125,7 +125,7 @@ void update_betas (field<vec> &betas, mat &res_betas, field<vec> &acceptance_bet
                          which_event, which_right_event, which_left,
                          any_interval, which_interval,
                          recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h); //!! new
-  
+
   ///////////////////////////////////////////////////////////////////////////////
   // FE outside HC - Metropolis-Hastings sampling
   if (any(has_tilde_betas)) {

@@ -130,7 +130,7 @@ vec log_surv (const vec &W0H_bs_gammas, const vec &W0h_bs_gammas,
 }
 
 //?? delete later, still used in simulate_REs() in mcmc_fit.cpp
-vec log_surv_old (const vec &W0H_bs_gammas, const vec &W0h_bs_gammas, //!! new
+vec log_surv_old (const vec &W0H_bs_gammas, const vec &W0h_bs_gammas,
                   const vec &W0H2_bs_gammas, const vec &WH_gammas,
                   const vec &Wh_gammas, const vec &WH2_gammas,
                   const vec &WlongH_alphas, const vec &Wlongh_alphas,
@@ -138,7 +138,7 @@ vec log_surv_old (const vec &W0H_bs_gammas, const vec &W0h_bs_gammas, //!! new
                   const uvec &indFast_H, const uvec &indFast_h, const uvec &which_event,
                   const uvec &which_right_event, const uvec &which_left,
                   const bool &any_interval, const uvec &which_interval) {
-  vec lambda_H = W0H_bs_gammas + WH_gammas + WlongH_alphas;
+    vec lambda_H = W0H_bs_gammas + WH_gammas + WlongH_alphas;
   vec H = group_sum(exp(log_Pwk + lambda_H), indFast_H);
   uword n = H.n_rows;
   vec lambda_h(n);
@@ -219,7 +219,7 @@ vec logLik_jm_stripped (
     //
     const bool &recurrent, const vec &alphaF, const vec &frailty, //!! new
     const uvec &which_term_H, const uvec &which_term_h //!! new
-  ) {
+) {
   uword n = b.at(0).n_rows;
   /////////////
   field<vec> betas_ = betas;
@@ -279,8 +279,8 @@ vec logLik_jm_stripped (
   vec alphaF_h(Wh_gammas.n_rows, fill::ones); //!! new
   alphaF_H.rows(which_term_H).fill(alphaF.at(1)); //!! new
   alphaF_h.rows(which_term_h).fill(alphaF.at(1)); //!! new
-  vec frailty_H(WH_gammas.n_rows); //!! new
-  vec frailty_h(Wh_gammas.n_rows); //!! new
+  vec frailty_H(WH_gammas.n_rows, fill::zeros); //!! new
+  vec frailty_h(Wh_gammas.n_rows, fill::zeros); //!! new
   frailty_h = frailty.rows(id_h); //!! new
   frailty_H = frailty.rows(id_H_); //!! new
   //
