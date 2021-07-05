@@ -25,6 +25,9 @@ dur_min <- difftime(toc, tic, units = "min")
 invisible(file.copy(from = "Gen_Data/fit_data.R", 
                     to = paste0("Gen_Data/", ref, "/gen_data.R"), 
                     overwrite = TRUE))
+invisible(file.copy(from = "Gen_Data/sim_funs.R", 
+                    to = paste0("Gen_Data/", ref, "/sim_funs.R"), 
+                    overwrite = TRUE))
 RPushbullet::pbPost("note", 
                     title = paste0("RecData: gen complete (", 
                                    round(dur_min, 2), " min)"))

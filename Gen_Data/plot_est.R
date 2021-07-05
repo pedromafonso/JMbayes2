@@ -3,10 +3,9 @@ ref <- "10"
 desc <- "gap"
 n_data <- 100L
 n <- 500L
-scale <- "gap"
 ################################################################################
-estimates <- readRDS(file = paste0("Gen_Data/estimates_", ref,".rds"))
-dur_min   <- readRDS(file = paste0("Gen_Data/dur_min_", ref,".rds"))
+estimates <- readRDS(file = paste0("Gen_Data/", ref, "/estimates_", ref,".rds"))
+dur_min   <- readRDS(file = paste0("Gen_Data/", ref, "/dur_min_", ref,".rds"))
 
 lme_est <- lapply(estimates, "[[", "lme_est") 
 jm_est  <- lapply(estimates, "[[", "jm_est")

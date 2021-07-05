@@ -6,7 +6,7 @@ n <- 500L
 scale <- "gap"
 ################################################################################
 ## fit data
-dataL <- readRDS(file = paste0("Gen_Data/dataL_", ref,".rds"))
+dataL <- readRDS(file = paste0("Gen_Data/", ref,"/dataL_", ref,".rds"))
 n_data <- length(dataL)
 n_cores <- max(parallel::detectCores() - 1L, 1L)
 #
