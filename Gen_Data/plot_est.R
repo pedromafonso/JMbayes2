@@ -1,5 +1,5 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "08"
+ref <- "10"
 desc <- "gap"
 n_data <- 100L
 n <- 500L
@@ -87,4 +87,6 @@ pdf(file = paste0("Gen_Data/plot_ref", ref,".pdf"),
   legend("bottom", legend = text, bty = "n", ncol = 3)
 }
 dev.off()
+file.copy(from = "Gen_Data/fit_data.R", 
+          to = paste0("Gen_Data/", ref, "/plot_est.R"), overwrite = TRUE)
 

@@ -1,5 +1,5 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "08"
+ref <- "10"
 desc <- "gap"
 n_data <- 100L
 n <- 500L
@@ -19,8 +19,11 @@ parallel::clusterExport(cl, list("n", "scale")) # load vars in each cl
 dataL <- parallel::parLapply(cl, seq_len(n_data), fun)
 parallel::stopCluster(cl)
 toc <- Sys.time()
-saveRDS(dataL, file = paste0("Gen_Data/dataL_", ref,".rds"))
+dir.create(paste0("Gen_Data/", ref))
+saveRDS(dataL, file = paste0("Gen_Data/", ref, "/dataL_", ref,".rds"))
 dur_min <- difftime(toc, tic, units = "min")
+file.copy(from = "Gen_Data/fit_data.R", 
+          to = paste0("Gen_Data/", ref, "/gen_data.R"), overwrite = TRUE)
 RPushbullet::pbPost("note", 
                     title = paste0("RecData: gen complete (", 
                                    round(dur_min, 2), " min)"))

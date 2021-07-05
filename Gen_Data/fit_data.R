@@ -1,5 +1,5 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "08"
+ref <- "10"
 desc <- "gap"
 n_data <- 100L
 n <- 500L
@@ -49,12 +49,14 @@ parallel::clusterExport(cl_out, list("dataL", "scale")) # load vars in each cl
 res <- parallel::parLapply(cl_out, seq_len(n_data), outer, ncl_in)
 parallel::stopCluster(cl_out)
 toc <- Sys.time()
-saveRDS(res, file = paste0("Gen_Data/estimates_", ref,".rds"))
+saveRDS(res, file = paste0("Gen_Data/", ref, "/estimates_", ref,".rds"))
 diff_time <- sapply(res, "[[", "timer")
 source("Gen_Data/sim_funs.R") # to use par_diag()
 par_diag(n_data, n_chains, ncl_in, ncl_out, n_cores, diff_time)
 dur_min <- difftime(toc, tic1, units = "mins")
-saveRDS(dur_min, file = paste0("Gen_Data/dur_min_", ref,".rds"))
+saveRDS(dur_min, file = paste0("Gen_Data/", ref, "/dur_min_", ref,".rds"))
+file.copy(from = "Gen_Data/fit_data.R", 
+          to = paste0("Gen_Data/", ref, "/fit_data.R"), overwrite = TRUE)
 RPushbullet::pbPost("note", 
                     title = paste0("RecData: fit complete (", 
                                    round(dur_min/60, 2), " h)"))
