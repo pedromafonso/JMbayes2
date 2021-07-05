@@ -1,6 +1,6 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "10"
-desc <- "gap"
+ref <- "11"
+desc <- "valued frailty and alphaF"
 n_data <- 100L
 n <- 500L
 scale <- "gap"

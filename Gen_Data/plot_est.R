@@ -1,8 +1,9 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "10"
-desc <- "gap"
+ref <- "11"
+desc <- "valued frailty and alphaF"
 n_data <- 100L
 n <- 500L
+scale <- "gap"
 ################################################################################
 estimates <- readRDS(file = paste0("Gen_Data/", ref, "/estimates_", ref,".rds"))
 dur_min   <- readRDS(file = paste0("Gen_Data/", ref, "/dur_min_", ref,".rds"))

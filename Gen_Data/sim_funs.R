@@ -1,4 +1,3 @@
-# this code does not account (yet) for the presence of a frailty term
 gen_RecData <- function (seed, n, n_scl = 1.5, alpha_r, alpha_t, scale = "gap") {
   
   set.seed(seed)
@@ -69,6 +68,7 @@ gen_RecData <- function (seed, n, n_scl = 1.5, alpha_r, alpha_t, scale = "gap") 
                      time  = ter_times[surv_na],
                      group = group[surv_na],
                      age   = age[surv_na])
+  frailty <- frailty[surv_na]
   cens_times <- tmax
   surv$Tstatus <- as.numeric(surv$time <= cens_times) # event indicator
   surv$time <- pmin(surv$time, cens_times) # add censoring time
