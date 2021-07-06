@@ -104,7 +104,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   vec nu_gammas = gammas.ones();
   double xi_gammas = 1.0;
   vec alphas = as<vec>(initial_values["alphas"]);
-  vec lambda_alphas = alphas.ones();
+  vec lambda_alphas = alphas.ones(); //?? talk with Dimitris about this. this is turning the initial values from the alphas to 1
   double tau_alphas = 1.0;
   vec nu_alphas = gammas.ones();
   double xi_alphas = 1.0;
@@ -261,7 +261,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   vec alphaF = as<vec>(initial_values["alphaF"]); //!! new
   vec mean_alphaF = as<vec>(priors["mean_alphaF"]); //!! new
   mat Tau_alphaF = as<mat>(priors["Tau_alphaF"]); //!! new
-  vec lambda_alphaF = alphaF.ones(); //!! new
+  vec lambda_alphaF(alphaF.n_rows, fill::ones); //!! new
   double tau_alphaF = 1.0; //!! new
   bool shrink_alphaF = false; //!! new //?? check this with Dimitris
   vec frailty = as<vec>(initial_values["frailty"]); //!! new
