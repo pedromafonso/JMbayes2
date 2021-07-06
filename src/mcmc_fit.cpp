@@ -259,9 +259,12 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   uvec which_term_H = as<uvec>(model_data["which_term_H"]) - 1; //!! new
   bool recurrent = as<bool>(model_data["recurrent"]); //!! new
   vec alphaF = as<vec>(initial_values["alphaF"]); //!! new
+  vec mean_alphaF = as<vec>(priors["mean_alphaF"]); //!! new
+  mat Tau_alphaF = as<mat>(priors["Tau_alphaF"]); //!! new
+  vec lambda_alphaF = alphaF.ones(); //!! new
+  double tau_alphaF = 1.0; //!! new
+  bool shrink_alphaF = false; //!! new //?? check this with Dimitris
   vec frailty = as<vec>(initial_values["frailty"]); //!! new
-  //alphaF.zeros(); //?? delete later
-  //frailty.zeros(); //?? delete later 
   mat res_alphaF(n_iter, 1, fill::zeros); //!! new
   mat acceptance_alphaF(n_iter, 1, fill::zeros); //!! new
   mat res_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new
@@ -290,7 +293,10 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                   mean_gammas, Tau_gammas, lambda_gammas,
                   tau_gammas, shrink_gammas,
                   mean_alphas, Tau_alphas, lambda_alphas,
-                  tau_alphas, shrink_alphas);
+                  tau_alphas, shrink_alphas,
+                  recurrent, alphaF, mean_alphaF, Tau_alphaF, lambda_alphaF, //!! new
+                  tau_alphaF, shrink_alphaF //!! new
+                  );
   //
   vec logLik_re = log_re(b_mat, L, sds);
   //
@@ -315,7 +321,9 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                      /////
                      W0_H, W0_h, W0_H2, scale_bs_gammas, acceptance_bs_gammas,
                      res_bs_gammas,
-                     recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h //!! new
+                     recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h, //!! new
+                     alphaF, mean_alphaF, Tau_alphaF, lambda_alphaF, tau_alphaF, //!! new
+                     shrink_alphaF //!! new
                     );
 
     ////////////////////////////////////////////////////////////////////////
@@ -350,7 +358,9 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                     W_H, W_h, W_H2, scale_gammas, acceptance_gammas,
                     res_gammas,
                     //
-                    recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h //!! new
+                    recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h, //!! new
+                    alphaF, mean_alphaF, Tau_alphaF, lambda_alphaF, tau_alphaF, //!! new
+                    shrink_alphaF //!! new
                     );
       res_W_std_gammas.at(it) = as_scalar(W_std * gammas);
 
@@ -382,7 +392,9 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                   Wlong_H, Wlong_h, Wlong_H2, scale_alphas,
                   acceptance_alphas, res_alphas,
                   //
-                  recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h //!! new
+                  recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h, //!! new
+                  alphaF, mean_alphaF, Tau_alphaF, lambda_alphaF, tau_alphaF, //!! new
+                  shrink_alphaF //!! new
                   );
 
     res_Wlong_std_alphas.at(it) = as_scalar(Wlong_std * alphas);
@@ -479,7 +491,10 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                     mean_gammas, Tau_gammas, lambda_gammas,
                     tau_gammas, shrink_gammas,
                     mean_alphas, Tau_alphas, lambda_alphas,
-                    tau_alphas, shrink_alphas);
+                    tau_alphas, shrink_alphas,
+                    recurrent, alphaF, mean_alphaF, Tau_alphaF, lambda_alphaF, //!! new
+                    tau_alphaF, shrink_alphaF //!! new
+      );
     }
     ////////////////////////////////////////////////////////////////////
 

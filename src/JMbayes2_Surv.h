@@ -17,7 +17,12 @@ double logPrior_surv ( //?? update later
     const vec &prior_mean_gammas, mat &prior_Tau_gammas, const vec &lambda_gammas,
     const double &tau_gammas, const bool &shrink_gammas,
     const vec &prior_mean_alphas, mat &prior_Tau_alphas, const vec &lambda_alphas,
-    const double &tau_alphas, const bool &shrink_alphas) {
+    const double &tau_alphas, const bool &shrink_alphas,
+    //
+    const bool &recurrent, const vec &alphaF, const vec prior_mean_alphaF, //!! new
+    mat &prior_Tau_alphaF, const vec &lambda_alphaF, const double &tau_alphaF, //!! new 
+    const bool &shrink_alphaF
+    ) {
   uword n_strata = prior_mean_bs_gammas.n_elem;
   uword n_per_stratum = bs_gammas.n_rows / n_strata;
   double out(0.0);
@@ -31,8 +36,36 @@ double logPrior_surv ( //?? update later
                   tau_gammas, shrink_gammas);
   out += logPrior(alphas, prior_mean_alphas, prior_Tau_alphas, lambda_alphas,
                   tau_alphas, shrink_alphas);
+  if (recurrent) {
+    out += logPrior(alphaF, prior_mean_alphaF, prior_Tau_alphaF, lambda_alphaF,
+                    tau_alphaF, shrink_alphaF);
+  }
   return out;
 }
+
+// double logPrior_surv_old ( //?? delete later
+//     const vec &bs_gammas, const vec&gammas, const vec &alphas,
+//     const field<vec> &prior_mean_bs_gammas, field<mat> &prior_Tau_bs_gammas,
+//     const vec &tau_bs_gammas,
+//     const vec &prior_mean_gammas, mat &prior_Tau_gammas, const vec &lambda_gammas,
+//     const double &tau_gammas, const bool &shrink_gammas,
+//     const vec &prior_mean_alphas, mat &prior_Tau_alphas, const vec &lambda_alphas,
+//     const double &tau_alphas, const bool &shrink_alphas) {
+//   uword n_strata = prior_mean_bs_gammas.n_elem;
+//   uword n_per_stratum = bs_gammas.n_rows / n_strata;
+//   double out(0.0);
+//   for (uword i = 0; i < n_strata; ++i) {
+//     vec mu = prior_mean_bs_gammas.at(i);
+//     out += logPrior(bs_gammas.rows(i * n_per_stratum, (i + 1) * n_per_stratum - 1),
+//                     mu, prior_Tau_bs_gammas.at(i), mu.ones(), tau_bs_gammas.at(i),
+//                     false);
+//   }
+//   out += logPrior(gammas, prior_mean_gammas, prior_Tau_gammas, lambda_gammas,
+//                   tau_gammas, shrink_gammas);
+//   out += logPrior(alphas, prior_mean_alphas, prior_Tau_alphas, lambda_alphas,
+//                   tau_alphas, shrink_alphas);
+//   return out;
+// }
 
 
 void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
@@ -58,7 +91,10 @@ void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
                        //
                        const bool &recurrent, //!! new
                        const vec &frailty_H, const vec &frailty_h, //!! new 
-                       const vec &alphaF_H, const vec &alphaF_h //!! new
+                       const vec &alphaF_H, const vec &alphaF_h, //!! new
+                       const vec &alphaF, const vec prior_mean_alphaF, //!! new
+                       mat &prior_Tau_alphaF, const vec &lambda_alphaF, //!! new
+                       const double &tau_alphaF, const bool &shrink_alphaF //!! new
 ) {
   for (uword i = 0; i < bs_gammas.n_rows; ++i) {
     vec proposed_bs_gammas = propose_norm(bs_gammas, scale_bs_gammas, i);
@@ -84,7 +120,10 @@ void update_bs_gammas (vec &bs_gammas, const vec &gammas, const vec &alphas,
       logPrior_surv(proposed_bs_gammas, gammas, alphas, prior_mean_bs_gammas,
                     prior_Tau_bs_gammas, tau_bs_gammas,
                     prior_mean_gammas, prior_Tau_gammas, lambda_gammas, tau_gammas, shrink_gammas,
-                    prior_mean_alphas, prior_Tau_alphas, lambda_alphas, tau_alphas, shrink_alphas);
+                    prior_mean_alphas, prior_Tau_alphas, lambda_alphas, tau_alphas, shrink_alphas,
+                    recurrent, alphaF, prior_mean_alphaF, prior_Tau_alphaF, //!! new
+                    lambda_alphaF, tau_alphaF, shrink_alphaF //!! new
+      );
     double log_ratio = numerator_surv - denominator_surv;
     if (std::isfinite(log_ratio) && exp(log_ratio) > R::runif(0.0, 1.0)) {
       bs_gammas = proposed_bs_gammas;
@@ -130,7 +169,10 @@ void update_gammas (const vec &bs_gammas, vec &gammas, const vec &alphas,
                     //
                     const bool &recurrent, //!! new
                     const vec &frailty_H, const vec &frailty_h, //!! new 
-                    const vec &alphaF_H, const vec &alphaF_h //!! new
+                    const vec &alphaF_H, const vec &alphaF_h, //!! new
+                    const vec &alphaF, const vec prior_mean_alphaF, //!! new
+                    mat &prior_Tau_alphaF, const vec &lambda_alphaF, //!! new
+                    const double &tau_alphaF, const bool &shrink_alphaF //!! new
                     ) {
   for (uword i = 0; i < gammas.n_rows; ++i) {
     vec proposed_gammas = propose_norm(gammas, scale_gammas, i);
@@ -156,7 +198,10 @@ void update_gammas (const vec &bs_gammas, vec &gammas, const vec &alphas,
       logPrior_surv(bs_gammas, proposed_gammas, alphas, prior_mean_bs_gammas,
                     prior_Tau_bs_gammas, tau_bs_gammas,
                     prior_mean_gammas, prior_Tau_gammas, lambda_gammas, tau_gammas, shrink_gammas,
-                    prior_mean_alphas, prior_Tau_alphas, lambda_alphas, tau_alphas, shrink_alphas);
+                    prior_mean_alphas, prior_Tau_alphas, lambda_alphas, tau_alphas, shrink_alphas,
+                    recurrent, alphaF, prior_mean_alphaF, prior_Tau_alphaF, //!! new
+                    lambda_alphaF, tau_alphaF, shrink_alphaF //!! new
+      );
     double log_ratio = numerator_surv - denominator_surv;
     if (std::isfinite(log_ratio) && exp(log_ratio) > R::runif(0.0, 1.0)) {
       gammas = proposed_gammas;
@@ -203,7 +248,10 @@ void update_alphas (const vec &bs_gammas, const vec &gammas, vec &alphas,
                     //
                     const bool &recurrent, //!! new
                     const vec &frailty_H, const vec &frailty_h, //!! new 
-                    const vec &alphaF_H, const vec &alphaF_h //!! new
+                    const vec &alphaF_H, const vec &alphaF_h, //!! new
+                    const vec &alphaF, const vec prior_mean_alphaF, //!! new
+                    mat &prior_Tau_alphaF, const vec &lambda_alphaF, //!! new
+                    const double &tau_alphaF, const bool &shrink_alphaF //!! new
                     ) {
   for (uword i = 0; i < alphas.n_rows; ++i) {
     vec proposed_alphas = propose_norm(alphas, scale_alphas, i);
@@ -229,7 +277,10 @@ void update_alphas (const vec &bs_gammas, const vec &gammas, vec &alphas,
       logPrior_surv(bs_gammas, gammas, proposed_alphas, prior_mean_bs_gammas,
                     prior_Tau_bs_gammas, tau_bs_gammas,
                     prior_mean_gammas, prior_Tau_gammas, lambda_gammas, tau_gammas, shrink_gammas,
-                    prior_mean_alphas, prior_Tau_alphas, lambda_alphas, tau_alphas, shrink_alphas);
+                    prior_mean_alphas, prior_Tau_alphas, lambda_alphas, tau_alphas, shrink_alphas,
+                    recurrent, alphaF, prior_mean_alphaF, prior_Tau_alphaF, //!! new
+                    lambda_alphaF, tau_alphaF, shrink_alphaF //!! new
+      );
     double log_ratio = numerator_surv - denominator_surv;
     if (std::isfinite(log_ratio) && exp(log_ratio) > R::runif(0.0, 1.0)) {
       alphas = proposed_alphas;
