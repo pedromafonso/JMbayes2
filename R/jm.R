@@ -1,7 +1,7 @@
 jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                 functional_forms = NULL, data_Surv = NULL, id_var = NULL,
                 priors = NULL, control = NULL, 
-                frailty = NULL, alphaF = NULL, ##?? delete later
+                frailty = NULL, ##?? delete later
                 ...) {
     call <- match.call()
     # control argument:
@@ -556,7 +556,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
     if (is.null(gammas)) gammas <- 0.0
     alphas <- rep(0.0, sum(sapply(U_H, ncol)))
     #frailty <- rep(0.0, nT) #!! new #?? not sure what would be the ideal initial value #?? uncomment later
-    #alphaF <- 0.0 #!! new #?? uncomment later
+    alphaF <- 0.0 #!! new
     initial_values <- list(betas = betas, log_sigmas = log_sigmas,
                            sigmas = sigmas, D = D, b = b, bs_gammas = bs_gammas,
                            gammas = gammas, alphas = alphas,

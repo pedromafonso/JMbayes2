@@ -277,8 +277,8 @@ vec logLik_jm_stripped (
   //
   vec alphaF_H(WH_gammas.n_rows, fill::ones); //!! new
   vec alphaF_h(Wh_gammas.n_rows, fill::ones); //!! new
-  alphaF_H.rows(which_term_H).fill(alphaF.at(1)); //!! new
-  alphaF_h.rows(which_term_h).fill(alphaF.at(1)); //!! new
+  alphaF_H.rows(which_term_H).fill(alphaF.at(0)); //!! new
+  alphaF_h.rows(which_term_h).fill(alphaF.at(0)); //!! new
   vec frailty_H(WH_gammas.n_rows, fill::zeros); //!! new
   vec frailty_h(Wh_gammas.n_rows, fill::zeros); //!! new
   frailty_h = frailty.rows(id_h); //!! new

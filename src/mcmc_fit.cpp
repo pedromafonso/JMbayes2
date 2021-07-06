@@ -264,6 +264,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   vec lambda_alphaF(alphaF.n_rows, fill::ones); //!! new
   double tau_alphaF = 1.0; //!! new
   bool shrink_alphaF = false; //!! new //?? check this with Dimitris
+  vec scale_alphaF = create_init_scale(1); //!! new
   vec frailty = as<vec>(initial_values["frailty"]); //!! new
   mat res_alphaF(n_iter, 1, fill::zeros); //!! new
   mat acceptance_alphaF(n_iter, 1, fill::zeros); //!! new
@@ -271,8 +272,8 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   mat acceptance_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new
   vec alphaF_H(WH_gammas.n_rows, fill::ones); //!! new
   vec alphaF_h(Wh_gammas.n_rows, fill::ones); //!! new
-  alphaF_H.rows(which_term_H).fill(alphaF.at(1)); //!! new
-  alphaF_h.rows(which_term_h).fill(alphaF.at(1)); //!! new
+  alphaF_H.rows(which_term_H).fill(alphaF.at(0)); //!! new
+  alphaF_h.rows(which_term_h).fill(alphaF.at(0)); //!! new
   vec frailty_H(WH_gammas.n_rows, fill::zeros); //!! new
   vec frailty_h(Wh_gammas.n_rows, fill::zeros); //!! new
   frailty_h = frailty.rows(id_h); //!! new
@@ -390,7 +391,9 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                   tau_alphas, shrink_alphas,
                   logLik_surv, denominator_surv, it,
                   /////
-                  Wlong_H, Wlong_h, Wlong_H2, scale_alphas,
+                  Wlong_H, Wlong_h, Wlong_H2, 
+                  
+                  scale_alphas,
                   acceptance_alphas, res_alphas,
                   //
                   recurrent, frailty_H, frailty_h, alphaF_H, alphaF_h, //!! new
@@ -411,9 +414,29 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
     ////////////////////////////////////////////////////////////////////////
     
     if (recurrent) {
-      
-      res_alphaF.row(it) = alphaF;
-    
+      update_alphaF(bs_gammas, gammas, alphas,
+                    W0H_bs_gammas, W0h_bs_gammas, W0H2_bs_gammas,
+                    WH_gammas, Wh_gammas, WH2_gammas,
+                    WlongH_alphas, Wlongh_alphas, WlongH2_alphas,
+                    log_Pwk, log_Pwk2, id_H_fast, id_h_fast,
+                    which_event, which_right_event, which_left, which_interval,
+                    any_event, any_interval,
+                    mean_bs_gammas, Tau_bs_gammas, tau_bs_gammas,
+                    mean_gammas, Tau_gammas, lambda_gammas,
+                    tau_gammas, shrink_gammas,
+                    mean_alphas, Tau_alphas, lambda_alphas,
+                    tau_alphas, shrink_alphas,
+                    logLik_surv, denominator_surv, it,
+                    Wlong_H, Wlong_h, Wlong_H2,
+                    //
+                    recurrent,
+                    which_term_H, which_term_h,
+                    frailty_H, frailty_h,
+                    alphaF, alphaF_H, alphaF_h,
+                    scale_alphaF, acceptance_alphaF, res_alphaF,
+                    mean_alphaF, Tau_alphaF,
+                    lambda_alphaF, tau_alphaF, 
+                    shrink_alphaF);
     }
     
     ////////////////////////////////////////////////////////////////////////
