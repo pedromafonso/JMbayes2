@@ -613,7 +613,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                 sigmas_df = 3.0,
                 sigmas_sigmas = rep(5.0, length(log_sigmas)),
                 sigmas_shape = 5.0, sigmas_mean = exp(log_sigmas),
-                mean_alphaF = 0.0, Tau_alpha = 1 #!! new
+                mean_alphaF = 0.0, Tau_alphaF = diag(1) #!! new
                 )
     if (is.null(priors) || !is.list(priors)) {
         priors <- prs

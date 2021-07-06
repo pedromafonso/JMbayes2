@@ -305,6 +305,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                              idL_lp_fast, unq_idL, n_b);
   //
   for (uword it = 0; it < n_iter; ++it) {
+    
     update_bs_gammas(bs_gammas, gammas, alphas,
                      W0H_bs_gammas, W0h_bs_gammas, W0H2_bs_gammas,
                      WH_gammas, Wh_gammas, WH2_gammas,
@@ -411,10 +412,6 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
     
     if (recurrent) {
       
-      // cout << res_alphaF.n_rows << "x" << res_alphaF.n_cols << endl;
-      // cout << res_alphaF.row(it).n_rows << "x" << res_alphaF.row(it).n_cols << endl;
-      // cout << alphaF.n_rows << "x" << alphaF.n_cols << endl;
-      // cout << alphaF.row(1).n_rows << "x" << alphaF.row(1).n_cols << endl;
       res_alphaF.row(it) = alphaF;
     
     }
