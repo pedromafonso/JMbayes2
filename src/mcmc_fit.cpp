@@ -99,14 +99,14 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   vec bs_gammas = as<vec>(initial_values["bs_gammas"]);
   vec tau_bs_gammas = as<vec>(initial_values["tau_bs_gammas"]);
   vec gammas = as<vec>(initial_values["gammas"]);
-  vec lambda_gammas = gammas.ones();
+  vec lambda_gammas(gammas.n_rows, fill::ones); //!! new
   double tau_gammas = 1.0;
-  vec nu_gammas = gammas.ones();
+  vec nu_gammas(gammas.n_rows, fill::ones); //!! new
   double xi_gammas = 1.0;
   vec alphas = as<vec>(initial_values["alphas"]);
-  vec lambda_alphas = alphas.ones(); //?? talk with Dimitris about this. this is turning the initial values from the alphas to 1
+  vec lambda_alphas(alphas.n_rows, fill::ones); //!! new
   double tau_alphas = 1.0;
-  vec nu_alphas = gammas.ones();
+  vec nu_alphas(alphas.n_rows, fill::ones); //!! new
   double xi_alphas = 1.0;
   field<mat> b = List2Field_mat(as<List>(initial_values["b"]));
   mat b_mat = docall_cbindF(b);
