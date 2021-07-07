@@ -258,6 +258,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   uvec which_term_h = as<uvec>(model_data["which_term_h"]) - 1; //!! new //?? later split these elements in the different sections
   uvec which_term_H = as<uvec>(model_data["which_term_H"]) - 1; //!! new
   bool recurrent = as<bool>(model_data["recurrent"]); //!! new
+  // alphaF
   vec alphaF = as<vec>(initial_values["alphaF"]); //!! new
   vec mean_alphaF = as<vec>(priors["mean_alphaF"]); //!! new
   mat Tau_alphaF = as<mat>(priors["Tau_alphaF"]); //!! new
@@ -265,15 +266,26 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   double tau_alphaF = 1.0; //!! new
   bool shrink_alphaF = false; //!! new //?? check this with Dimitris
   vec scale_alphaF = create_init_scale(1); //!! new
-  vec frailty = as<vec>(initial_values["frailty"]); //!! new
   mat res_alphaF(n_iter, 1, fill::zeros); //!! new
   mat acceptance_alphaF(n_iter, 1, fill::zeros); //!! new
-  mat res_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new
-  mat acceptance_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new
   vec alphaF_H(WH_gammas.n_rows, fill::ones); //!! new
   vec alphaF_h(Wh_gammas.n_rows, fill::ones); //!! new
   alphaF_H.rows(which_term_H).fill(alphaF.at(0)); //!! new
   alphaF_h.rows(which_term_h).fill(alphaF.at(0)); //!! new
+  // sigmaF
+  vec sigmaF = as<vec>(initial_values["sigmaF"]); //!! new
+  bool gamma_prior_sigmaF = as<bool>(priors["gamma_prior_sigmaF"]); //!! new
+  double sigmaF_df = as<double>(priors["sigmaF_df"]); //!! new
+  vec sigmaF_sigmas = as<vec>(priors["sigmaF_sigmas"]); //!! new
+  double sigmaF_shape = as<double>(priors["sigmaF_shape"]); //!! new
+  vec sigmaF_mean = as<vec>(priors["sigmaF_mean"]); //!! new
+  vec scale_sigmaF = create_init_scale(1); //!! new
+  mat res_sigmaF(n_iter, 1, fill::zeros); //!! new
+  mat acceptance_sigmaF(n_iter, 1, fill::zeros); //!! new
+  // frailty
+  vec frailty = as<vec>(initial_values["frailty"]); //!! new
+  mat res_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new
+  mat acceptance_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new
   vec frailty_H(WH_gammas.n_rows, fill::zeros); //!! new
   vec frailty_h(Wh_gammas.n_rows, fill::zeros); //!! new
   frailty_h = frailty.rows(id_h); //!! new
@@ -437,6 +449,10 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                     mean_alphaF, Tau_alphaF,
                     lambda_alphaF, tau_alphaF, 
                     shrink_alphaF);
+      
+      update_sigmaF(sigmaF, frailty,
+                    gamma_prior_sigmaF, sigmaF_df, sigmaF_sigmas, sigmaF_shape, 
+                    sigmaF_mean, it, res_sigmaF, scale_sigmaF, acceptance_sigmaF);
     }
     
     ////////////////////////////////////////////////////////////////////////
@@ -549,8 +565,9 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
       Named("outprod_b") = outprod_b,
       Named("sigmas") = res_sigmas.rows(n_burnin, n_iter - 1),
       Named("betas") = res_betas.rows(n_burnin, n_iter - 1),
-      Named("alphaF") = res_alphaF.rows(n_burnin, n_iter - 1),
-      Named("frailty") = res_frailty.rows(n_burnin, n_iter - 1)
+      Named("alphaF") = res_alphaF.rows(n_burnin, n_iter - 1), //!! new
+      Named("frailty") = res_frailty.rows(n_burnin, n_iter - 1), //!! new
+      Named("sigmaF") = res_sigmaF.rows(n_burnin, n_iter - 1) //!! new
     ),
     Named("acc_rate") = List::create(
       Named("bs_gammas") = mean(acceptance_bs_gammas.rows(n_burnin, n_iter - 1)),
@@ -561,8 +578,9 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
       Named("b") = acceptance_b,
       Named("sigmas") = mean(acceptance_sigmas.rows(n_burnin, n_iter - 1)),
       Named("betas") = acceptance_betas,
-      Named("alphaF") = mean(acceptance_alphaF.rows(n_burnin, n_iter - 1)),
-      Named("frailty") = acceptance_frailty
+      Named("alphaF") = mean(acceptance_alphaF.rows(n_burnin, n_iter - 1)), //!! new
+      Named("frailty") = acceptance_frailty, //!! new
+      Named("sigmaF") = mean(acceptance_sigmaF.rows(n_burnin, n_iter - 1)) //!! new
     ),
     Named("logLik") = res_logLik.rows(n_burnin, n_iter - 1)
   );

@@ -67,4 +67,39 @@ void update_sigmas (vec &sigmas, const uvec &has_sigmas,
   }
 }
 
+//!! new
+void update_sigmaF (vec &sigmaF, const vec &frailty,
+                    const bool &gammaF_prior,
+                    const double &sigmaF_df, const vec &sigmaF_sigmas,
+                    const double &sigmaF_shape, const vec &sigmaF_mean,
+                    const uword &it, mat &res_sigmaF, vec &scale_sigmaF,
+                    mat &acceptance_sigmaF) {
+    vec mu_0(frailty.n_rows, fill::zeros);
+    vec logLik_frailty_i = log_dnorm(frailty, mu_0, sigmaF.at(0));
+    double denominator = sum(logLik_frailty_i) +
+      sum(logPrior_sigmas(sigmaF, gammaF_prior, sigmaF_sigmas, sigmaF_df,
+                          sigmaF_mean, sigmaF_shape));
+    //
+    double SS = 0.5 * std::pow(scale_sigmaF.at(0), 2.0); //?? check this with Dimitris
+    double log_mu_current = std::log(sigmaF.at(0)) - SS;
+    vec proposed_sigmaF = propose_lnorm(sigmaF, log_mu_current, scale_sigmaF, 0);
+    vec logLik_frailty_proposed_i = log_dnorm(frailty, mu_0, proposed_sigmaF.at(0));
+    double numerator = sum(logLik_frailty_proposed_i) +
+      sum(logPrior_sigmas(proposed_sigmaF, gammaF_prior, sigmaF_sigmas, sigmaF_df,
+                          sigmaF_mean, sigmaF_shape));
+    double log_mu_proposed = std::log(proposed_sigmaF.at(0)) - SS;
+    double log_ratio = numerator - denominator +
+      R::dlnorm(sigmaF.at(0), log_mu_proposed, scale_sigmaF.at(0), true) -
+      R::dlnorm(proposed_sigmaF.at(0), log_mu_current, scale_sigmaF.at(0), true);
+    if (std::isfinite(log_ratio) && std::exp(log_ratio) > R::runif(0.0, 1.0)) {
+      sigmaF = proposed_sigmaF;
+      acceptance_sigmaF.at(it, 0) = 1;
+    }
+    if (it > 119) {
+      scale_sigmaF.at(0) =
+        robbins_monro(scale_sigmaF.at(0), acceptance_sigmaF.at(it, 0), it - 100); //?? check this 100 with Dimitris
+    }
+    res_sigmaF.at(it, 0) = sigmaF.at(0);
+}
+
 #endif

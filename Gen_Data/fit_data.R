@@ -1,6 +1,6 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "16"
-desc <- "test before add frailty sampler"
+ref <- "17"
+desc <- "sigmaF sampler"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
@@ -39,8 +39,10 @@ outer <- function(i, ncl_in){
   jm_alpha <- jm_fit$statistics$Mean$alphas
   jm_gammas <- jm_fit$statistics$Mean$gammas
   jm_alphaF <- jm_fit$statistics$Mean$alphaF
+  jm_sigmaF <- jm_fit$statistics$Mean$sigmaF
   jm_est <- list(betas = jm_betas, vcov = jm_vcov, sigma = jm_sigma, 
-                 alpha = jm_alpha, gammas = jm_gammas, alphaF = jm_alphaF)
+                 alpha = jm_alpha, gammas = jm_gammas, alphaF = jm_alphaF,
+                 sigmaF = jm_sigmaF)
   # return
   list(lme_est = lme_est, jm_est = jm_est, timer = timer)
 }
