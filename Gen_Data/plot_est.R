@@ -1,6 +1,6 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "11"
-desc <- "valued frailty and alphaF"
+ref <- "16"
+desc <- "test before add frailty sampler"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
@@ -63,7 +63,7 @@ prms <- c("beta1", "beta2", "beta3", "beta4",
           "sigma", "gamma1_R", "gamma2_R", "gamma1_T", "gamma2_T",
           "alpha_R", "alpha_T", "alphaF")
 
-pdf(file = paste0("Gen_Data/plot_ref", ref,".pdf"),
+pdf(file = paste0("Gen_Data/", ref, "/plot_ref", ref,".pdf"),
     height = 10, width = 7.5)
 {
   par(oma = c(2.5, 1, 1, 1))

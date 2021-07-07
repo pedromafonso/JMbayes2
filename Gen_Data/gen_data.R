@@ -1,6 +1,6 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "11"
-desc <- "valued frailty and alphaF"
+ref <- "16"
+desc <- "test before add frailty sampler"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
