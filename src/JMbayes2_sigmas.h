@@ -97,7 +97,7 @@ void update_sigmaF (vec &sigmaF, const vec &frailty,
     }
     if (it > 119) {
       scale_sigmaF.at(0) =
-        robbins_monro(scale_sigmaF.at(0), acceptance_sigmaF.at(it, 0), it - 100); //?? check this 100 with Dimitris
+        robbins_monro(scale_sigmaF.at(0), acceptance_sigmaF.at(it, 0), it);
     }
     res_sigmaF.at(it, 0) = sigmaF.at(0);
 }
