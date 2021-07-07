@@ -619,7 +619,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
                 sigmaF_df = 3.0, #!! new
                 sigmaF_sigmas = 5.0, #!! new
                 sigmaF_shape = 5.0, #!! new 
-                sigmas_mean = 0.0 #!! new #?? not sure if this is the value that we need, for the other sigmas we use exp(log_sigmas)
+                sigmaF_mean = 0.01 #!! new #?? not sure if this is the value that we need, for the other sigmas we use exp(log_sigmas)
                 )
     if (is.null(priors) || !is.list(priors)) {
         priors <- prs
