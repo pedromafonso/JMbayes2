@@ -75,7 +75,7 @@ void update_sigmaF (vec &sigmaF, const vec &frailty,
                     const uword &it, mat &res_sigmaF, vec &scale_sigmaF,
                     mat &acceptance_sigmaF) {
     vec mu_0(frailty.n_rows, fill::zeros);
-    vec logLik_frailty = log_dnorm(frailty, mu_0, sigmaF.at(0));
+    vec logLik_frailty = log_dnorm(frailty, mu_0, sigmaF.at(0)); //?? logLik_frailty could be an input and shared with update_frailty
     double denominator = sum(logLik_frailty) +
       sum(logPrior_sigmas(sigmaF, gammaF_prior, sigmaF_sigmas, sigmaF_df,
                           sigmaF_mean, sigmaF_shape));
