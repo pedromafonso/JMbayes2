@@ -1,6 +1,6 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "17"
-desc <- "sigmaF sampler"
+ref <- "18"
+desc <- "frailty sampler"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
@@ -25,8 +25,7 @@ outer <- function(i, ncl_in){
                    data = dataL[[i]]$rec_strt)
   jm_fit <- jm(cox_fit, lme_fit, time_var = "time", 
                functional_forms = list("y" = ~ value(y) * strata),
-               cores = ncl_in, recurrent = scale, 
-               frailty = dataL[[i]]$frailty) #?? delete later
+               cores = ncl_in, recurrent = scale)
   timer <- difftime(Sys.time(), tic2, units = "mins")
   # get estimates
   lme_betas <- fixef(lme_fit)
@@ -40,9 +39,10 @@ outer <- function(i, ncl_in){
   jm_gammas <- jm_fit$statistics$Mean$gammas
   jm_alphaF <- jm_fit$statistics$Mean$alphaF
   jm_sigmaF <- jm_fit$statistics$Mean$sigmaF
+  jm_frailty <- jm_fit$statistics$Mean$frailty
   jm_est <- list(betas = jm_betas, vcov = jm_vcov, sigma = jm_sigma, 
                  alpha = jm_alpha, gammas = jm_gammas, alphaF = jm_alphaF,
-                 sigmaF = jm_sigmaF)
+                 sigmaF = jm_sigmaF, frailty = jm_frailty)
   # return
   list(lme_est = lme_est, jm_est = jm_est, timer = timer)
 }

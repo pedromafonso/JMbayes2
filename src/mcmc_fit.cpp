@@ -286,6 +286,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   vec frailty = as<vec>(initial_values["frailty"]); //!! new
   mat res_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new
   mat acceptance_frailty(n_iter, 1, fill::zeros); //!! new
+  vec scale_frailty = vec(frailty.n_elem, fill::ones) * 0.1; //!! new //?? check with Dimitris
   vec frailty_H(WH_gammas.n_rows, fill::zeros); //!! new
   vec frailty_h(Wh_gammas.n_rows, fill::zeros); //!! new
   frailty_h = frailty.rows(id_h); //!! new
@@ -440,7 +441,6 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                     tau_alphas, shrink_alphas,
                     logLik_surv, denominator_surv, it,
                     Wlong_H, Wlong_h, Wlong_H2,
-                    //
                     recurrent,
                     which_term_H, which_term_h,
                     frailty_H, frailty_h,
@@ -453,6 +453,24 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
       update_sigmaF(sigmaF, frailty,
                     gamma_prior_sigmaF, sigmaF_df, sigmaF_sigmas, sigmaF_shape, 
                     sigmaF_mean, it, res_sigmaF, scale_sigmaF, acceptance_sigmaF);
+      
+      update_frailty(frailty, res_frailty, acceptance_frailty,
+                     scale_frailty, frailty_H, frailty_h,
+                     logLik_surv,
+                     recurrent, sigmaF,
+                     alphaF_H, alphaF_h,
+                     WlongH_alphas, Wlongh_alphas,
+                     WlongH2_alphas,
+                     id_H_, id_h,
+                     W0H_bs_gammas, W0h_bs_gammas,
+                     W0H2_bs_gammas, WH_gammas,
+                     Wh_gammas, WH2_gammas,
+                     log_Pwk, log_Pwk2,
+                     id_H_fast, id_h_fast,
+                     which_event, which_right_event,
+                     which_left, which_interval,
+                     any_interval,
+                     n_burnin, it);
     }
     
     ////////////////////////////////////////////////////////////////////////
@@ -549,6 +567,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
     res_gammas.each_row() /= W_sds;
   }
   res_alphas.each_row() /= Wlong_sds;
+  acceptance_frailty = acceptance_frailty / (n_iter - n_burnin); //!! new
   return List::create(
     Named("mcmc") = List::create(
       Named("bs_gammas") = res_bs_gammas.rows(n_burnin, n_iter - 1),
