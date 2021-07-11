@@ -307,7 +307,7 @@ mat propose_mvnorm_mat (const int &n, const cube &S, const vec &scale) {
 //!! new
 vec propose_rnorm_vec (const vec &thetas, const vec &scale) {
   vec proposed_thetas = thetas;
-  proposed_thetas = scale % randn(thetas.n_rows, 1) + thetas;
+  proposed_thetas = scale % randn(thetas.n_rows) + thetas;
   return proposed_thetas;
 }
 

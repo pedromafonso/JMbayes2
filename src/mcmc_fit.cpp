@@ -286,7 +286,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   vec frailty = as<vec>(initial_values["frailty"]); //!! new
   mat res_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new
   mat acceptance_frailty(n_iter, 1, fill::zeros); //!! new
-  vec scale_frailty = vec(frailty.n_elem, fill::ones) * 0.1; //!! new //?? check with Dimitris
+  vec scale_frailty = vec(frailty.n_elem, fill::ones); //* 0.1; //!! new //?? check with Dimitris
   vec frailty_H(WH_gammas.n_rows, fill::zeros); //!! new
   vec frailty_h(Wh_gammas.n_rows, fill::zeros); //!! new
   frailty_h = frailty.rows(id_h); //!! new
