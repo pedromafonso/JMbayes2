@@ -176,8 +176,8 @@ void update_frailty (vec &frailty, mat &res_frailty, mat &acceptance_frailty,
   vec logLik_frailty = log_dnorm(frailty, mu_0, sigmaF.at(0)); //?? logLik_frailty could be an input and shared with update_sigmaF
   vec denominator_frailty = logLik_surv + logLik_frailty;
   // propose new frailty
-  //vec frailty_proposed = propose_rnorm_vec(frailty, scale_frailty);
-  vec frailty_proposed = propose_rnorm_vec(frailty, mu_0); //?? delte later
+  vec frailty_proposed = propose_rnorm_vec(frailty, scale_frailty);
+  //vec frailty_proposed = propose_rnorm_vec(frailty, mu_0); //?? delete later
   // calculate logLik_Surv_proposed
   vec frailty_H_proposed(frailty_H.n_rows, fill::zeros);
   vec frailty_h_proposed(frailty_h.n_rows, fill::zeros);

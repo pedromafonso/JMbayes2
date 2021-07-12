@@ -1,6 +1,6 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "30"
-desc <- "quick test"
+ref <- "31"
+desc <- "scale_frailty = 0.01"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
@@ -18,13 +18,13 @@ colnames(lme_est) <- c("beta1", "beta2", "beta3", "beta4",
 lme_est <- as.data.frame(lme_est)
 lme_est$model <- "lme"
 jm_est <- do.call(rbind, lapply(jm_est, unlist))
-colnames(jm_est) <- c("beta1", "beta2", "beta3", "beta4",
-                      "D[1,1]", "D[2,1]", "D[3,1]", "D[4,1]", "D[2,2]",
-                      "D[2,3]", "D[2,4]", "D[3,3]", "D[3,4]", "D[4,4]", 
-                      "sigma",
-                      "alpha_R", "alpha_T", 
-                      "gamma1_R", "gamma2_R", "gamma1_T", "gamma2_T", "alphaF",
-                      "sigmaF")
+colnames(jm_est)[1:23] <- c("beta1", "beta2", "beta3", "beta4",
+                            "D[1,1]", "D[2,1]", "D[3,1]", "D[4,1]", "D[2,2]",
+                            "D[2,3]", "D[2,4]", "D[3,3]", "D[3,4]", "D[4,4]", 
+                            "sigma",
+                            "alpha_R", "alpha_T", 
+                            "gamma1_R", "gamma2_R", "gamma1_T", "gamma2_T", "alphaF",
+                            "sigmaF")
 jm_est[, "gamma1_T"] <- rowSums(jm_est[, c("gamma1_R", "gamma1_T")])
 jm_est[, "gamma2_T"] <- rowSums(jm_est[, c("gamma2_R", "gamma2_T")])
 jm_est[, "alpha_T"]  <- rowSums(jm_est[, c("alpha_R", "alpha_T")])
