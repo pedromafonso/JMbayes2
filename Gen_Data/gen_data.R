@@ -1,6 +1,6 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "18"
-desc <- "frailty sampler"
+ref <- "30"
+desc <- "quick test"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
