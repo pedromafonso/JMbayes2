@@ -1,9 +1,12 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "31"
-desc <- "scale_frailty = 0.01"
+ref <- "32"
+desc <- "scale_frailty=0.5, init=0, >>n_iter"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
+n_iter <- 25000L
+n_burnin <- 5000L
+n_thin <- 5L
 ################################################################################
 ## generate data
 n_cores <- max(parallel::detectCores() - 1, 1L)

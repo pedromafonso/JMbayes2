@@ -1,12 +1,9 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "32"
-desc <- "scale_frailty=0.5, init=0, >>n_iter"
+ref <- "31"
+desc <- "scale_frailty = 0.01"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
-n_iter <- 25000L
-n_burnin <- 5000L
-n_thin <- 5L
 ################################################################################
 ## fit data
 dataL <- readRDS(file = paste0("Gen_Data/", ref,"/dataL_", ref,".rds"))
@@ -29,7 +26,6 @@ outer <- function(i, ncl_in){
   jm_fit <- jm(cox_fit, lme_fit, time_var = "time", 
                functional_forms = list("y" = ~ value(y) * strata),
                cores = ncl_in, recurrent = scale,
-               n_iter = n_iter, n_burnin = n_burnin, n_thin = n_thin,
                frailty = dataL[[i]]$frailty)
   timer <- difftime(Sys.time(), tic2, units = "mins")
   # get estimates
