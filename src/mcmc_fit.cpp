@@ -285,8 +285,9 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   // frailty
   vec frailty = as<vec>(initial_values["frailty"]); //!! new
   mat res_frailty(n_iter, frailty.n_elem, fill::zeros); //!! new
-  mat acceptance_frailty(n_iter, 1, fill::zeros); //!! new
-  vec scale_frailty = vec(frailty.n_elem, fill::ones); //* 0.1; //!! new //?? check with Dimitris
+  mat acceptance_frailty(frailty.n_rows, 1, fill::zeros); //!! new
+  vec scale_frailty = vec(frailty.n_elem, fill::ones) * 0.5; //!! new //?? check with Dimitris
+  //vec scale_frailty = create_init_scale(frailty.n_rows); //!! new
   vec frailty_H(WH_gammas.n_rows, fill::zeros); //!! new
   vec frailty_h(Wh_gammas.n_rows, fill::zeros); //!! new
   frailty_h = frailty.rows(id_h); //!! new
@@ -447,12 +448,15 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                     alphaF, alphaF_H, alphaF_h,
                     scale_alphaF, acceptance_alphaF, res_alphaF,
                     mean_alphaF, Tau_alphaF,
-                    lambda_alphaF, tau_alphaF, 
+                    lambda_alphaF, tau_alphaF,
                     shrink_alphaF);
       
       update_sigmaF(sigmaF, frailty,
-                    gamma_prior_sigmaF, sigmaF_df, sigmaF_sigmas, sigmaF_shape, 
+                    gamma_prior_sigmaF, sigmaF_df, sigmaF_sigmas, sigmaF_shape,
                     sigmaF_mean, it, res_sigmaF, scale_sigmaF, acceptance_sigmaF);
+      
+      //res_sigmaF.at(it, 0) = sigmaF.at(0);
+      //res_alphaF.at(it, 0) = alphaF.at(0);
       
       update_frailty(frailty, res_frailty, acceptance_frailty,
                      scale_frailty, frailty_H, frailty_h,
