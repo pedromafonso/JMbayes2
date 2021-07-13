@@ -1,12 +1,12 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "34"
-desc <- "new update_frailty"
+ref <- "37"
+desc <- "frailty_init = 0"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
-n_iter <- 3500L
-n_burnin <- 500L
-n_thin <- 1L
+n_iter <- 7000L
+n_burnin <- 1000L
+n_thin <- 3L
 ################################################################################
 ## fit data
 dataL <- readRDS(file = paste0("Gen_Data/", ref,"/dataL_", ref,".rds"))

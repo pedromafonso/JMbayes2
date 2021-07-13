@@ -1,6 +1,6 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "34"
-desc <- "new update_frailty"
+ref <- "38"
+desc <- "frailty_init = 0, and normal iter"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
