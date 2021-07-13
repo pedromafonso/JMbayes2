@@ -25,7 +25,8 @@ outer <- function(i, ncl_in){
                  data = dataL[[i]]$long, 
                  control = lmeControl(opt = "optim", niterEM = 45))
   cox_fit <- coxph(Surv(tstart, tstop, status) ~ (group + age) * strata(strata),
-                   data = dataL[[i]]$rec_strt)
+                   data = dataL[[i]]$rec_strt,
+                   frailty = dataL[[i]]$frailty)
   jm_fit <- jm(cox_fit, lme_fit, time_var = "time", 
                functional_forms = list("y" = ~ value(y) * strata),
                cores = ncl_in, recurrent = scale,

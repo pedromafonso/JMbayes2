@@ -1,9 +1,12 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "31"
-desc <- "scale_frailty = 0.01"
+ref <- "34"
+desc <- "new update_frailty"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
+n_iter <- 3500L
+n_burnin <- 500L
+n_thin <- 1L
 ################################################################################
 estimates <- readRDS(file = paste0("Gen_Data/", ref, "/estimates_", ref,".rds"))
 dur_min   <- readRDS(file = paste0("Gen_Data/", ref, "/dur_min_", ref,".rds"))
@@ -78,7 +81,6 @@ pdf(file = paste0("Gen_Data/", ref, "/plot_ref", ref,".pdf"),
     abline(h = true_values[prm], col = 2)
   }
   par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
-  n <- 500
   text <- c(paste0("Ref: ", ref, " (", format(Sys.Date(), format="%b %d"), ")"),
             paste0("Desc: ", desc),
             paste0("# datasets: ", n_data),

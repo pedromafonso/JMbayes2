@@ -555,7 +555,7 @@ jm <- function (Surv_object, Mixed_objects, time_var, recurrent = FALSE,
         -coef(Surv_object) / Surv_object$scale
     if (is.null(gammas)) gammas <- 0.0
     alphas <- rep(0.0, sum(sapply(U_H, ncol)))
-    frailty <- rep(0.0, nT) #!! new #?? not sure what would be the ideal initial value #?? uncomment later
+    #frailty <- rep(0.0, nT) #!! new #?? not sure what would be the ideal initial value #?? uncomment later
     alphaF <- 0.0 #!! new
     sigmaF <- 0.1 #!! new #?? not sure if this would be the ideal value
     initial_values <- list(betas = betas, log_sigmas = log_sigmas,
