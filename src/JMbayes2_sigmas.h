@@ -68,14 +68,14 @@ void update_sigmas (vec &sigmas, const uvec &has_sigmas,
 }
 
 //!! new
-void update_sigmaF (vec &sigmaF, const vec &frailty,
+void update_sigmaF (vec &sigmaF, vec &logLik_frailty, const vec &frailty,
                     const bool &gammaF_prior,
                     const double &sigmaF_df, const vec &sigmaF_sigmas,
                     const double &sigmaF_shape, const vec &sigmaF_mean,
                     const uword &it, mat &res_sigmaF, vec &scale_sigmaF,
                     mat &acceptance_sigmaF) {
-    vec mu_0(frailty.n_rows, fill::zeros);
-    vec logLik_frailty = log_dnorm(frailty, mu_0, sigmaF.at(0)); //?? logLik_frailty could be an input and shared with update_frailty
+    //vec mu_0(frailty.n_rows, fill::zeros);
+    //vec logLik_frailty = log_dnorm(frailty, mu_0, sigmaF.at(0)); //?? logLik_frailty could be an input and shared with update_frailty
     double denominator = sum(logLik_frailty) +
       sum(logPrior_sigmas(sigmaF, gammaF_prior, sigmaF_sigmas, sigmaF_df,
                           sigmaF_mean, sigmaF_shape));
@@ -83,7 +83,7 @@ void update_sigmaF (vec &sigmaF, const vec &frailty,
     double SS = 0.5 * std::pow(scale_sigmaF.at(0), 2.0); //?? check this with Dimitris
     double log_mu_current = std::log(sigmaF.at(0)) - SS;
     vec proposed_sigmaF = propose_lnorm(sigmaF, log_mu_current, scale_sigmaF, 0);
-    vec logLik_frailty_proposed = log_dnorm(frailty, mu_0, proposed_sigmaF.at(0));
+    vec logLik_frailty_proposed = log_dnorm(frailty, vec(frailty.n_elem, fill::zeros), proposed_sigmaF.at(0));
     double numerator = sum(logLik_frailty_proposed) +
       sum(logPrior_sigmas(proposed_sigmaF, gammaF_prior, sigmaF_sigmas, sigmaF_df,
                           sigmaF_mean, sigmaF_shape));
@@ -94,6 +94,7 @@ void update_sigmaF (vec &sigmaF, const vec &frailty,
     if (std::isfinite(log_ratio) && std::exp(log_ratio) > R::runif(0.0, 1.0)) {
       sigmaF = proposed_sigmaF;
       acceptance_sigmaF.at(it, 0) = 1;
+      logLik_frailty = logLik_frailty_proposed;
     }
     if (it > 19) {
       scale_sigmaF.at(0) =

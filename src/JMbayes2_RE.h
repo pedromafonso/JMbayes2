@@ -154,7 +154,7 @@ void update_b (field<mat> &b, mat &b_mat, field<vec> &eta,
 //!! new
 void update_frailty (vec &frailty, mat &res_frailty, mat &acceptance_frailty,
                      vec &scale_frailty, vec &frailty_H, vec &frailty_h,
-                     vec &logLik_surv,
+                     vec &logLik_surv, vec &logLik_frailty,
                      const bool &recurrent, const vec &sigmaF,
                      const vec &alphaF_H, const vec &alphaF_h,
                      //
@@ -172,12 +172,12 @@ void update_frailty (vec &frailty, mat &res_frailty, mat &acceptance_frailty,
                      const uword &n_burnin, const uword &it) {
   uword n = frailty.n_rows;
   // calculate denominator
-  vec mu_0(n, fill::zeros);
-  vec logLik_frailty = log_dnorm(frailty, mu_0, sigmaF.at(0)); //?? logLik_frailty could be an input and shared with update_sigmaF
+  //vec mu_0(n, fill::zeros);
+  //vec logLik_frailty = log_dnorm(frailty, mu_0, sigmaF.at(0)); //?? logLik_frailty could be an input and shared with update_sigmaF
   vec denominator_frailty = logLik_surv + logLik_frailty;
   // propose new frailty
   //vec frailty_proposed = propose_rnorm_vec(frailty, scale_frailty);
-  vec frailty_proposed = propose_rnorm_vec(frailty, mu_0); //?? delete later
+  vec frailty_proposed = propose_rnorm_vec(frailty, vec(frailty.n_elem, fill::zeros)); //?? delete later
   // calculate logLik_Surv_proposed
   vec frailty_H_proposed(frailty_H.n_rows, fill::zeros);
   vec frailty_h_proposed(frailty_h.n_rows, fill::zeros);
@@ -194,7 +194,7 @@ void update_frailty (vec &frailty, mat &res_frailty, mat &acceptance_frailty,
              recurrent, frailty_H_proposed, frailty_h_proposed,
              alphaF_H, alphaF_h);
   // logLik_frailty_proposed
-  vec logLik_frailty_proposed = log_dnorm(frailty_proposed, mu_0, sigmaF.at(0));
+  vec logLik_frailty_proposed = log_dnorm(frailty_proposed, vec(frailty.n_elem, fill::zeros), sigmaF.at(0));
   // calculate the numerator
   vec numerator_frailty = logLik_surv_proposed + logLik_frailty_proposed;
   // log_ratio
@@ -208,7 +208,7 @@ void update_frailty (vec &frailty, mat &res_frailty, mat &acceptance_frailty,
       frailty.at(i) = frailty_proposed.at(i);
       //denominator_frailty.at(i) = numerator_frailty.at(i);
       logLik_surv.at(i) = logLik_surv_proposed.at(i);
-      //logLik_frailty.at(i) = logLik_frailty_proposed.at(i);
+      logLik_frailty.at(i) = logLik_frailty_proposed.at(i);
     }
     if (it > 19) {
       scale_frailty.at(i) =

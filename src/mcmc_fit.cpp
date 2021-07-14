@@ -318,6 +318,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
   field<vec> eta = linpred_mixed(X, betas, Z, b, idL);
   vec logLik_long = log_long(y, eta, sigmas, extra_parms, families, links,
                              idL_lp_fast, unq_idL, n_b);
+  vec logLik_frailty = log_dnorm(frailty, vec(frailty.n_elem, fill::zeros), sigmaF.at(0)); //!! new
   //
   for (uword it = 0; it < n_iter; ++it) {
     
@@ -451,7 +452,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
                     lambda_alphaF, tau_alphaF,
                     shrink_alphaF);
       
-      update_sigmaF(sigmaF, frailty,
+      update_sigmaF(sigmaF, logLik_frailty, frailty,
                     gamma_prior_sigmaF, sigmaF_df, sigmaF_sigmas, sigmaF_shape,
                     sigmaF_mean, it, res_sigmaF, scale_sigmaF, acceptance_sigmaF);
       
@@ -460,7 +461,7 @@ List mcmc_cpp (List model_data, List model_info, List initial_values,
       
       update_frailty(frailty, res_frailty, acceptance_frailty,
                      scale_frailty, frailty_H, frailty_h,
-                     logLik_surv,
+                     logLik_surv, logLik_frailty,
                      recurrent, sigmaF,
                      alphaF_H, alphaF_h,
                      WlongH_alphas, Wlongh_alphas,

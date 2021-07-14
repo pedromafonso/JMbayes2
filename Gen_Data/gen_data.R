@@ -1,6 +1,6 @@
 setwd( "C:/Users/pedro/Documents/GitHub/JMbayes2-RE")
-ref <- "39"
-desc <- "frailty_init = true, scale = 0"
+ref <- "40"
+desc <- "logLik_frailty outside, frailty_init = true, scale = 0"
 n_data <- 100L
 n <- 500L
 scale <- "gap"
