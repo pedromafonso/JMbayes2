@@ -152,7 +152,7 @@ void update_b (field<mat> &b, mat &b_mat, field<vec> &eta,
 }
 
 //!! new
-void update_frailty (vec &frailty, mat &res_frailty, mat &acceptance_frailty,
+void update_frailty (vec &frailty, mat &res_frailty, mat &acceptance_frailty, 
                      vec &scale_frailty, vec &frailty_H, vec &frailty_h,
                      vec &logLik_surv, vec &logLik_frailty,
                      const bool &recurrent, const vec &sigmaF,
@@ -176,8 +176,8 @@ void update_frailty (vec &frailty, mat &res_frailty, mat &acceptance_frailty,
   //vec logLik_frailty = log_dnorm(frailty, mu_0, sigmaF.at(0)); //?? logLik_frailty could be an input and shared with update_sigmaF
   vec denominator_frailty = logLik_surv + logLik_frailty;
   // propose new frailty
-  //vec frailty_proposed = propose_rnorm_vec(frailty, scale_frailty);
-  vec frailty_proposed = propose_rnorm_vec(frailty, vec(frailty.n_elem, fill::zeros)); //?? delete later
+  vec frailty_proposed = propose_rnorm_vec(frailty, scale_frailty);
+  //vec frailty_proposed = propose_rnorm_vec(frailty, vec(frailty.n_elem, fill::zeros)); //?? delete later
   // calculate logLik_Surv_proposed
   vec frailty_H_proposed(frailty_H.n_rows, fill::zeros);
   vec frailty_h_proposed(frailty_h.n_rows, fill::zeros);
@@ -213,6 +213,7 @@ void update_frailty (vec &frailty, mat &res_frailty, mat &acceptance_frailty,
     if (it > 19) {
       scale_frailty.at(i) =
         robbins_monro(scale_frailty.at(i), acc_i, it);
+       //robbins_monro(scale_frailty.at(i), acc_i, it);
     }
   }
   frailty_H = frailty.rows(id_H_);

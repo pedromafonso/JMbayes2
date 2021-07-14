@@ -92,7 +92,7 @@ pdf(file = paste0("Gen_Data/", ref, "/plot_ref", ref,".pdf"),
   legend("bottom", legend = text, bty = "n", ncol = 3)
 }
 dev.off()
-invisible(file.copy(from = "Gen_Data/fit_data.R", 
+invisible(file.copy(from = "Gen_Data/plot_est.R", 
                     to = paste0("Gen_Data/", ref, "/plot_est.R"), 
                     overwrite = TRUE))
 
